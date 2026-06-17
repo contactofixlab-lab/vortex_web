@@ -1,0 +1,170 @@
+@import "tailwindcss";
+
+:root {
+  /* Fondo */
+  --bg-base: #0a0a0f;
+  --bg-surface: #0f0f1a;
+  --bg-card: rgba(255, 255, 255, 0.04);
+  --bg-card-hover: rgba(255, 255, 255, 0.07);
+
+  /* Bordes glass */
+  --border-glass: rgba(255, 255, 255, 0.08);
+  --border-glass-hover: rgba(255, 255, 255, 0.16);
+
+  /* Neon colors */
+  --neon-cyan: #00f5ff;
+  --neon-violet: #bf5fff;
+  --neon-pink: #ff2d78;
+  --neon-green: #39ff14;
+  --neon-yellow: #ffe600;
+
+  /* Servidores */
+  --server-onedrive: #00a4ef;
+  --server-gdrive: #39ff14;
+  --server-mega: #ff2d78;
+
+  /* Texto */
+  --text-primary: #e8e8f0;
+  --text-secondary: #8888aa;
+  --text-muted: #4a4a6a;
+
+  --background: var(--bg-base);
+  --foreground: var(--text-primary);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-neon-cyan: var(--neon-cyan);
+  --color-neon-violet: var(--neon-violet);
+  --color-neon-pink: var(--neon-pink);
+  --color-neon-green: var(--neon-green);
+  --color-neon-yellow: var(--neon-yellow);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg-base);
+  color: var(--text-primary);
+  font-family: var(--font-inter), Arial, sans-serif;
+  min-height: 100vh;
+}
+
+/* Scrollbar cyberpunk */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-surface);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--neon-cyan);
+  border-radius: 3px;
+  opacity: 0.5;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--neon-violet);
+}
+
+/* Utilidades glass */
+.glass {
+  background: var(--bg-card);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border-glass);
+}
+
+.glass-hover {
+  transition: background 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+.glass-hover:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--border-glass-hover);
+}
+
+/* Glow neon */
+.glow-cyan  { box-shadow: 0 0 12px rgba(0, 245, 255, 0.35); }
+.glow-violet { box-shadow: 0 0 12px rgba(191, 95, 255, 0.35); }
+.glow-pink  { box-shadow: 0 0 12px rgba(255, 45, 120, 0.35); }
+.glow-green { box-shadow: 0 0 12px rgba(57, 255, 20, 0.35); }
+
+/* Texto neon */
+.text-neon-cyan   { color: var(--neon-cyan); }
+.text-neon-violet { color: var(--neon-violet); }
+.text-neon-pink   { color: var(--neon-pink); }
+.text-neon-green  { color: var(--neon-green); }
+.text-neon-yellow { color: var(--neon-yellow); }
+
+/* Línea decorativa neon */
+.neon-line {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent);
+}
+
+/* ── Login animations ── */
+
+@keyframes orb-float-1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33%       { transform: translate(30px, -40px) scale(1.1); }
+  66%       { transform: translate(-20px, 20px) scale(0.95); }
+}
+@keyframes orb-float-2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  40%       { transform: translate(-40px, 30px) scale(1.05); }
+  70%       { transform: translate(25px, -25px) scale(0.9); }
+}
+@keyframes orb-float-3 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50%       { transform: translate(20px, 40px) scale(1.08); }
+}
+
+@keyframes grid-pulse {
+  0%, 100% { opacity: 0.03; }
+  50%       { opacity: 0.07; }
+}
+
+@keyframes border-glow-spin {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes input-glow {
+  0%, 100% { box-shadow: 0 0 0px rgba(0,245,255,0); }
+  50%       { box-shadow: 0 0 8px rgba(0,245,255,0.4); }
+}
+
+@keyframes logo-pulse {
+  0%, 100% { text-shadow: 0 0 10px rgba(0,245,255,0.6), 0 0 30px rgba(0,245,255,0.2); }
+  50%       { text-shadow: 0 0 20px rgba(0,245,255,0.9), 0 0 60px rgba(0,245,255,0.4); }
+}
+
+@keyframes scan-line {
+  0%   { transform: translateY(-100%); opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 1; }
+  100% { transform: translateY(100vh); opacity: 0; }
+}
+
+.login-logo {
+  animation: logo-pulse 3s ease-in-out infinite;
+}
+
+.orb-1 { animation: orb-float-1 12s ease-in-out infinite; }
+.orb-2 { animation: orb-float-2 15s ease-in-out infinite; }
+.orb-3 { animation: orb-float-3 10s ease-in-out infinite; }
+
+.login-grid {
+  animation: grid-pulse 4s ease-in-out infinite;
+}
+
+.scan-line {
+  animation: scan-line 6s linear infinite;
+}
