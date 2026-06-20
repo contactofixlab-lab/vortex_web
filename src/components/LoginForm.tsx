@@ -17,6 +17,8 @@ export default function LoginForm() {
   const [email, setEmail]         = useState("");
   const [password, setPassword]   = useState("");
   const [nombre, setNombre]       = useState("");
+  const [telefono, setTelefono]   = useState("");
+  const [pais, setPais]           = useState("");
   const [error, setError]         = useState<string | null>(null);
 
   async function handleSubmit(e: React.FormEvent) {
@@ -25,7 +27,7 @@ export default function LoginForm() {
     setLoading(true);
     const result = tab === "login"
       ? await iniciarSesion(email, password)
-      : await registrarUsuario(nombre, email, password);
+      : await registrarUsuario(nombre, email, password, telefono, pais);
     if (!result.ok) {
       setError(result.error);
       setLoading(false);
@@ -126,13 +128,29 @@ export default function LoginForm() {
 
             {/* Nombre (solo en registro) */}
             {tab === "registro" && (
-              <InputField
-                icon={<User size={16} />}
-                type="text"
-                placeholder="Tu nombre"
-                value={nombre}
-                onChange={setNombre}
-              />
+              <>
+                <InputField
+                  icon={<User size={16} />}
+                  type="text"
+                  placeholder="Tu nombre"
+                  value={nombre}
+                  onChange={setNombre}
+                />
+                <InputField
+                  icon={<User size={16} />}
+                  type="tel"
+                  placeholder="Teléfono (opcional)"
+                  value={telefono}
+                  onChange={setTelefono}
+                />
+                <InputField
+                  icon={<User size={16} />}
+                  type="text"
+                  placeholder="País"
+                  value={pais}
+                  onChange={setPais}
+                />
+              </>
             )}
 
             {/* Email */}

@@ -11,6 +11,15 @@ export type Usuario = {
   id: number;
   nombre: string;
   email: string;
+  telefono?: string;
+  pais?: string;
+  avatar_url?: string;
+  username?: string;
+  biografia?: string;
+  generos_favoritos?: string[];
+  idiomas_preferidos?: string[];
+  perfil_visible?: boolean;
+  notificaciones_habilitadas?: boolean;
 };
 
 export async function crearSesion(usuarioId: number) {
@@ -44,12 +53,26 @@ export const getSesion = cache(async (): Promise<Usuario | null> => {
   if (!token) return null;
 
   const rows = await sql`
-    SELECT u.id, u.nombre, u.email
+    SELECT u.id, u.nombre, u.email, u.telefono, u.pais, u.avatar_url, u.username,
+           u.biografia, u.generos_favoritos, u.idiomas_preferidos, u.perfil_visible, u.notificaciones_habilitadas
     FROM sesion s
     JOIN usuario u ON u.id = s.usuario_id
     WHERE s.token = ${token} AND s.expires_at > now()
     LIMIT 1
   `;
   if (rows.length === 0) return null;
-  return { id: rows[0].id as number, nombre: rows[0].nombre as string, email: rows[0].email as string };
+  return {
+    id: rows[0].id as number,
+    nombre: rows[0].nombre as string,
+    email: rows[0].email as string,
+    telefono: rows[0].telefono as string | undefined,
+    pais: rows[0].pais as string | undefined,
+    avatar_url: rows[0].avatar_url as string | undefined,
+    username: rows[0].username as string | undefined,
+    biografia: rows[0].biografia as string | undefined,
+    generos_favoritos: rows[0].generos_favoritos as string[] | undefined,
+    idiomas_preferidos: rows[0].idiomas_preferidos as string[] | undefined,
+    perfil_visible: rows[0].perfil_visible as boolean | undefined,
+    notificaciones_habilitadas: rows[0].notificaciones_habilitadas as boolean | undefined,
+  };
 });

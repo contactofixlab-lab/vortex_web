@@ -25,11 +25,15 @@ export default function Navbar() {
   const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    function onOutside(e: MouseEvent) {
-      if (menuRef.current && !menuRef.current.contains(e.target as Node)) setMenuOpen(false);
+    function onOutside(e: Event) {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setMenuOpen(false);
+      }
     }
-    document.addEventListener("mousedown", onOutside);
-    return () => document.removeEventListener("mousedown", onOutside);
+    setTimeout(() => {
+      document.addEventListener("click", onOutside);
+    }, 0);
+    return () => document.removeEventListener("click", onOutside);
   }, []);
 
   async function handleLogout() {
