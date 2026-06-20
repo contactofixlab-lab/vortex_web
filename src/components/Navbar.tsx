@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { Search, User, Menu, X, Heart, LogOut, ChevronDown } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
@@ -44,12 +45,8 @@ export default function Navbar() {
         <div className="px-4 h-16 flex items-center justify-between gap-6">
 
           {/* Logo */}
-          <Link
-            href="/"
-            className="text-2xl font-black tracking-widest shrink-0"
-            style={{ fontFamily: "var(--font-orbitron)", color: "var(--neon-cyan)" }}
-          >
-            VORTEX
+          <Link href="/" className="relative flex-shrink-0" style={{ width: 40, height: 40 }}>
+            <Image src="/vortex logo.png" alt="Vortex" fill sizes="40px" style={{ objectFit: "contain" }} />
           </Link>
 
           {/* Nav links — desktop */}

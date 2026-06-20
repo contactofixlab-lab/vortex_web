@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Mail, Lock, Eye, EyeOff, User, ArrowRight, Loader2, AlertCircle } from "lucide-react";
-import AnimeBackground from "./AnimeBackground";
 import { iniciarSesion, registrarUsuario } from "@/app/actions";
 
 type Tab = "login" | "registro";
@@ -36,13 +36,15 @@ export default function LoginForm() {
   }
 
   return (
-    /* ── Fondo cyberpunk ── */
+    /* ── Fondo con imagen estática ── */
     <div
       className="relative min-h-screen flex items-center justify-center overflow-hidden"
       style={{ background: "var(--bg-base)" }}
     >
-      {/* Canvas con efectos anime (ki, chakra, rayos, rasengans) */}
-      <AnimeBackground />
+      {/* Imagen de fondo */}
+      <div className="absolute inset-0 z-0">
+        <Image src="/fondo login.png" alt="Login background" fill style={{ objectFit: "cover" }} priority />
+      </div>
 
       {/* Grid sutil de fondo */}
       <div
