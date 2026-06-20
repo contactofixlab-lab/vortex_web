@@ -1,6 +1,6 @@
 import ContentCard from "@/components/ContentCard";
+import FiltersPanel from "@/components/FiltersPanel";
 import { ANIMES } from "@/lib/placeholder-data";
-import { Filter } from "lucide-react";
 
 export const metadata = { title: "Anime — Vortex" };
 
@@ -29,37 +29,19 @@ export default function AnimePage() {
         </span>
       </div>
 
-      {/* Filtros */}
-      <div className="glass-card rounded-2xl p-4 mb-8 flex flex-wrap gap-4 items-center">
-        <div className="flex items-center gap-2" style={{ color: "var(--neon-violet)" }}>
-          <Filter size={16} />
-          <span className="text-sm font-semibold" style={{ fontFamily: "var(--font-orbitron)" }}>
-            FILTROS
-          </span>
+      {/* Contenido + filtros sticky a la derecha */}
+      <div className="flex flex-col lg:flex-row gap-6 items-start">
+        <div className="w-full lg:flex-1 lg:min-w-0 order-2 lg:order-1">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-4">
+            {ANIMES.map((item) => (
+              <ContentCard key={item.id} item={item} />
+            ))}
+          </div>
         </div>
 
-        {[
-          { label: "Género", options: GENEROS },
-          { label: "Año",    options: AÑOS    },
-          { label: "Idioma", options: IDIOMAS },
-        ].map(({ label, options }) => (
-          <div key={label} className="flex flex-col gap-1">
-            <span className="text-xs" style={{ color: "var(--text-muted)" }}>{label}</span>
-            <select
-              className="input-glass text-sm rounded-xl px-3 py-1.5 cursor-pointer"
-              style={{ color: "var(--text-primary)" }}
-            >
-              {options.map((o) => <option key={o} value={o}>{o}</option>)}
-            </select>
-          </div>
-        ))}
-      </div>
-
-      {/* Grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-        {ANIMES.map((item) => (
-          <ContentCard key={item.id} item={item} />
-        ))}
+        <aside className="w-full lg:w-64 shrink-0 lg:sticky lg:top-24 order-1 lg:order-2">
+          <FiltersPanel genero={GENEROS} año={AÑOS} idioma={IDIOMAS} />
+        </aside>
       </div>
     </div>
   );

@@ -56,14 +56,9 @@ export default function Hero({ items }: { items: Contenido[] }) {
         </span>
       </div>
 
-      {/* Banner principal — autoplay: foto, título y una descripción breve, nada más */}
+      {/* Banner — foto + nombre a la izquierda, descripción a la derecha. Cambia solo. */}
       <div
-        className="relative rounded-3xl overflow-hidden min-h-[300px] md:min-h-[380px]"
-        style={{
-          border: "1px solid var(--border-glass)",
-          borderTopColor: "rgba(255,255,255,0.14)",
-          boxShadow: "var(--shadow-glass-lg)",
-        }}
+        className="relative glass-card rounded-3xl overflow-hidden"
         onMouseEnter={() => setPaused(true)}
         onMouseLeave={() => setPaused(false)}
       >
@@ -73,37 +68,38 @@ export default function Hero({ items }: { items: Contenido[] }) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.7, ease: "easeOut" }}
-            className="absolute inset-0"
+            transition={{ duration: 0.6, ease: "easeOut" }}
           >
-            <Link href={`/${TIPO_HREF[actual.tipo]}/${actual.slug}`} className="group absolute inset-0 block">
-              <Image
-                src={actual.portada}
-                alt={actual.titulo}
-                fill
-                className="object-cover opacity-55 group-hover:opacity-65 transition-opacity duration-500"
-                sizes="100vw"
-                priority
-              />
-              <div
-                className="absolute inset-0"
-                style={{ background: "linear-gradient(to top, rgba(10,11,20,0.96) 30%, rgba(10,11,20,0.45) 65%, transparent 100%)" }}
-              />
+            <Link href={`/${TIPO_HREF[actual.tipo]}/${actual.slug}`} className="group flex flex-col md:flex-row gap-6 p-5 md:p-7">
+              {/* Imagen + nombre debajo */}
+              <div className="w-full md:w-56 shrink-0">
+                <div className="relative aspect-[2/3] rounded-2xl overflow-hidden mb-3">
+                  <Image
+                    src={actual.portada}
+                    alt={actual.titulo}
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    sizes="(max-width: 768px) 100vw, 224px"
+                    priority
+                  />
+                </div>
+                <h2
+                  className="text-lg md:text-xl font-black leading-tight"
+                  style={{ fontFamily: "var(--font-orbitron)", color: "var(--text-primary)" }}
+                >
+                  {actual.titulo}
+                </h2>
+              </div>
 
-              {/* Contenido — solo lo esencial: tipo, título, descripción */}
-              <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8 max-w-xl">
+              {/* Descripción a la derecha */}
+              <div className="flex-1 min-w-0 flex flex-col justify-center">
                 <span
-                  className="inline-block text-[10px] font-bold tracking-widest px-2 py-0.5 rounded mb-3"
+                  className="inline-block w-fit text-[10px] font-bold tracking-widest px-2 py-0.5 rounded mb-3"
                   style={{ background: `${color}22`, color, border: `1px solid ${color}55`, fontFamily: "var(--font-orbitron)" }}
                 >
                   {actual.tipo.toUpperCase()}
                 </span>
-
-                <h2 className="text-3xl md:text-4xl font-black leading-tight mb-2" style={{ fontFamily: "var(--font-orbitron)", color: "var(--text-primary)" }}>
-                  {actual.titulo}
-                </h2>
-
-                <p className="text-sm line-clamp-2" style={{ color: "var(--text-secondary)" }}>
+                <p className="text-sm md:text-base" style={{ color: "var(--text-secondary)" }}>
                   {actual.descripcion}
                 </p>
               </div>
