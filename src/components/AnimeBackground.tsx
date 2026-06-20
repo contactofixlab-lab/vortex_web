@@ -277,6 +277,7 @@ export default function AnimeBackground() {
     ];
 
     function drawRasengan(rs: Rasengan){
+      if (!ctx) return;
       const pulse=0.85+0.15*Math.sin(t*0.05+rs.angle);
       ctx.save();
       const auraR=rs.radius*2.2*pulse;
@@ -335,6 +336,7 @@ export default function AnimeBackground() {
     }
 
     function drawKiOrb(o: KiOrb){
+      if (!ctx) return;
       const pulse=0.7+0.3*Math.sin(t*0.04+o.phase);
       const r=o.radius*pulse,glow=r*3.2;
       const g=ctx.createRadialGradient(o.x,o.y,0,o.x,o.y,glow);
@@ -356,6 +358,7 @@ export default function AnimeBackground() {
     }
 
     function drawParticles(){
+      if (!ctx) return;
       const w=W(),h=H();
       for(const p of particles){
         ctx.beginPath();ctx.arc(p.x,p.y,p.size,0,Math.PI*2);
@@ -370,6 +373,7 @@ export default function AnimeBackground() {
     }
 
     function drawRings(){
+      if (!ctx) return;
       for(let i=rings.length-1;i>=0;i--){
         const r=rings[i];
         ctx.beginPath();ctx.arc(r.x,r.y,r.radius,0,Math.PI*2);
@@ -381,6 +385,7 @@ export default function AnimeBackground() {
     }
 
     function drawBolts(){
+      if (!ctx) return;
       for(let i=bolts.length-1;i>=0;i--){
         const b=bolts[i];
         const prog=b.life/b.maxLife;
@@ -396,6 +401,7 @@ export default function AnimeBackground() {
     let ringTimer=0, boltTimer=0;
 
     function loop(){
+      if (!ctx) return;
       const w=W(),h=H();
       ctx.clearRect(0,0,w,h);
 

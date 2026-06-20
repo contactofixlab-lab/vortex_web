@@ -17,11 +17,10 @@ export default function SiteShell({ children }: { children: React.ReactNode }) {
     <>
       <Navbar />
       <main className="flex-1">{children}</main>
-      <footer
-        className="text-center py-6 text-xs mt-8"
-        style={{ color: "var(--text-muted)", borderTop: "1px solid var(--border-glass)" }}
-      >
-        © 2026 Vortex · Solo para uso personal
+      <footer className="px-3 md:px-6 mt-10 mb-4">
+        <div className="glass-card max-w-7xl mx-auto rounded-2xl text-center py-5 text-xs" style={{ color: "var(--text-muted)" }}>
+          © 2026 Vortex · Solo para uso personal
+        </div>
       </footer>
     </>
   );

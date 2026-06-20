@@ -33,10 +33,12 @@ export default function Hero({ items }: { items: Contenido[] }) {
         {/* Card principal grande */}
         <Link
           href={`/${TIPO_HREF[principal.tipo]}/${principal.slug}`}
-          className="group lg:col-span-2 relative rounded-2xl overflow-hidden"
+          className="group lg:col-span-2 relative rounded-3xl overflow-hidden transition-transform duration-300 ease-out hover:-translate-y-1"
           style={{
             background: "var(--bg-card)",
             border: "1px solid var(--border-glass)",
+            borderTopColor: "rgba(255,255,255,0.14)",
+            boxShadow: "var(--shadow-glass-lg)",
             minHeight: 260,
           }}
         >
@@ -111,7 +113,7 @@ export default function Hero({ items }: { items: Contenido[] }) {
 
           {/* Hover glow border */}
           <div
-            className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-300"
+            className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-300"
             style={{ boxShadow: "inset 0 0 0 1px rgba(0,245,255,0.3)" }}
           />
         </Link>
@@ -128,11 +130,7 @@ export default function Hero({ items }: { items: Contenido[] }) {
               <Link
                 key={item.id}
                 href={`/${TIPO_HREF[item.tipo]}/${item.slug}`}
-                className="group relative rounded-xl overflow-hidden flex gap-3 p-3 transition-all duration-200"
-                style={{
-                  background: "var(--bg-card)",
-                  border: "1px solid var(--border-glass)",
-                }}
+                className="glass-card group relative rounded-2xl overflow-hidden flex gap-3 p-3"
               >
                 {/* Miniatura */}
                 <div className="relative w-14 h-20 shrink-0 rounded-lg overflow-hidden">
@@ -166,7 +164,7 @@ export default function Hero({ items }: { items: Contenido[] }) {
 
                 {/* Hover border */}
                 <div
-                  className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity"
+                  className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity"
                   style={{ boxShadow: `inset 0 0 0 1px ${color}44` }}
                 />
               </Link>

@@ -55,8 +55,9 @@ export default function LoginForm() {
           background: "rgba(10,10,20,0.85)",
           backdropFilter: "blur(24px)",
           border: "1px solid rgba(0,245,255,0.2)",
-          borderRadius: "1.5rem",
-          boxShadow: "0 0 60px rgba(0,245,255,0.08), 0 0 0 1px rgba(191,95,255,0.08) inset",
+          borderTopColor: "rgba(0,245,255,0.35)",
+          borderRadius: "1.75rem",
+          boxShadow: "var(--shadow-glass-lg), 0 0 60px rgba(0,245,255,0.08), 0 0 0 1px rgba(191,95,255,0.08) inset",
         }}
       >
         {/* Borde superior neon */}
@@ -233,7 +234,9 @@ function InputField({
       style={{
         background: "rgba(255,255,255,0.04)",
         border: `1px solid ${focused ? "rgba(0,245,255,0.5)" : "var(--border-glass)"}`,
-        boxShadow: focused ? "0 0 16px rgba(0,245,255,0.12)" : "none",
+        boxShadow: focused
+          ? "0 0 16px rgba(0,245,255,0.12), 0 1px 3px rgba(0,0,0,0.3) inset"
+          : "0 1px 3px rgba(0,0,0,0.3) inset",
       }}
     >
       <span style={{ color: focused ? "var(--neon-cyan)" : "var(--text-muted)", transition: "color 0.2s" }}>

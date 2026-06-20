@@ -29,10 +29,7 @@ export default function PeliculasPage() {
       </div>
 
       {/* Filtros */}
-      <div
-        className="glass rounded-xl p-4 mb-8 flex flex-wrap gap-4 items-center"
-        style={{ border: "1px solid var(--border-glass)" }}
-      >
+      <div className="glass-card rounded-2xl p-4 mb-8 flex flex-wrap gap-4 items-center">
         <div className="flex items-center gap-2" style={{ color: "var(--neon-pink)" }}>
           <Filter size={16} />
           <span className="text-sm font-semibold" style={{ fontFamily: "var(--font-orbitron)" }}>
@@ -48,12 +45,8 @@ export default function PeliculasPage() {
           <div key={label} className="flex flex-col gap-1">
             <span className="text-xs" style={{ color: "var(--text-muted)" }}>{label}</span>
             <select
-              className="text-sm rounded-lg px-3 py-1.5 outline-none cursor-pointer"
-              style={{
-                background: "rgba(255,255,255,0.05)",
-                color: "var(--text-primary)",
-                border: "1px solid var(--border-glass)",
-              }}
+              className="input-glass text-sm rounded-xl px-3 py-1.5 cursor-pointer"
+              style={{ color: "var(--text-primary)" }}
             >
               {options.map((o) => <option key={o} value={o}>{o}</option>)}
             </select>

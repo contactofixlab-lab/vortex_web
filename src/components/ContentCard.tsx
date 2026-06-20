@@ -26,13 +26,7 @@ export default function ContentCard({ item }: { item: Contenido }) {
 
   return (
     <Link href={href} className="group block">
-      <div
-        className="relative rounded-xl overflow-hidden transition-all duration-300"
-        style={{
-          background: "var(--bg-card)",
-          border: "1px solid var(--border-glass)",
-        }}
-      >
+      <div className="glass-card relative rounded-2xl overflow-hidden">
         {/* Portada */}
         <div className="relative aspect-[2/3] overflow-hidden">
           <Image
@@ -97,7 +91,7 @@ export default function ContentCard({ item }: { item: Contenido }) {
 
         {/* Borde neon en hover */}
         <div
-          className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-300"
+          className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-300"
           style={{ boxShadow: `inset 0 0 0 1px ${color}55` }}
         />
       </div>

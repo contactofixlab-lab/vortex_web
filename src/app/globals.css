@@ -30,6 +30,30 @@
 
   --background: var(--bg-base);
   --foreground: var(--text-primary);
+
+  /* ── Glass 3D (2026) ── */
+  --glass-blur: blur(22px);
+  --glass-blur-sm: blur(14px);
+
+  --shadow-glass:
+    0 2px 0 rgba(255,255,255,0.06) inset,
+    0 -1px 0 rgba(0,0,0,0.25) inset,
+    0 8px 24px rgba(0,0,0,0.45),
+    0 2px 6px rgba(0,0,0,0.3),
+    0 0 0 1px rgba(255,255,255,0.04);
+
+  --shadow-glass-lg:
+    0 2px 0 rgba(255,255,255,0.08) inset,
+    0 -1px 0 rgba(0,0,0,0.3) inset,
+    0 24px 64px rgba(0,0,0,0.55),
+    0 6px 18px rgba(0,0,0,0.35),
+    0 0 0 1px rgba(255,255,255,0.05);
+
+  --shadow-float:
+    0 1px 0 rgba(255,255,255,0.09) inset,
+    0 16px 40px rgba(0,0,0,0.5),
+    0 4px 12px rgba(0,0,0,0.35),
+    0 0 0 1px rgba(255,255,255,0.06);
 }
 
 @theme inline {
@@ -55,6 +79,10 @@ body {
   color: var(--text-primary);
   font-family: var(--font-inter), Arial, sans-serif;
   min-height: 100vh;
+  background-image:
+    radial-gradient(ellipse 70% 50% at 15% -10%, rgba(191,95,255,0.08) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 90% 110%, rgba(0,245,255,0.06) 0%, transparent 60%);
+  background-attachment: fixed;
 }
 
 /* Scrollbar cyberpunk */
@@ -87,6 +115,47 @@ body {
 .glass-hover:hover {
   background: var(--bg-card-hover);
   border-color: var(--border-glass-hover);
+}
+
+/* ── Glass 3D — card con profundidad y hover lift ── */
+.glass-card {
+  background: linear-gradient(145deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.015) 100%);
+  backdrop-filter: var(--glass-blur-sm);
+  -webkit-backdrop-filter: var(--glass-blur-sm);
+  border: 1px solid var(--border-glass);
+  border-top-color: rgba(255,255,255,0.16);
+  border-left-color: rgba(255,255,255,0.1);
+  box-shadow: var(--shadow-glass);
+  transition: transform 0.25s cubic-bezier(0.4,0,0.2,1), box-shadow 0.25s ease, border-color 0.25s ease;
+}
+.glass-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-glass-lg);
+  border-color: var(--border-glass-hover);
+}
+
+/* ── Navbar flotante ── */
+.glass-nav {
+  background: rgba(12,12,22,0.6);
+  backdrop-filter: var(--glass-blur) saturate(150%);
+  -webkit-backdrop-filter: var(--glass-blur) saturate(150%);
+  border: 1px solid var(--border-glass);
+  border-top-color: rgba(255,255,255,0.14);
+  box-shadow: var(--shadow-float);
+}
+
+/* ── Inputs con profundidad ── */
+.input-glass {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border-glass);
+  border-top-color: rgba(255,255,255,0.05);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3) inset;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.input-glass:focus {
+  outline: none;
+  border-color: rgba(0,245,255,0.45);
+  box-shadow: 0 0 0 3px rgba(0,245,255,0.08), 0 1px 3px rgba(0,0,0,0.3) inset;
 }
 
 /* Glow neon */
