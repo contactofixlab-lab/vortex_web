@@ -63,9 +63,9 @@ export default function Hero({ items }: { items: Contenido[] }) {
               <span
                 className="text-[10px] font-bold tracking-widest px-2 py-0.5 rounded"
                 style={{
-                  background: "rgba(0,245,255,0.15)",
+                  background: "rgba(0,184,255,0.15)",
                   color: "var(--neon-cyan)",
-                  border: "1px solid rgba(0,245,255,0.3)",
+                  border: "1px solid rgba(0,184,255,0.3)",
                   fontFamily: "var(--font-orbitron)",
                 }}
               >
@@ -114,7 +114,7 @@ export default function Hero({ items }: { items: Contenido[] }) {
           {/* Hover glow border */}
           <div
             className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-300"
-            style={{ boxShadow: "inset 0 0 0 1px rgba(0,245,255,0.3)" }}
+            style={{ boxShadow: "inset 0 0 0 1px rgba(0,184,255,0.3)" }}
           />
         </Link>
 

@@ -35,8 +35,8 @@ export default function LoginForm() {
         className="login-grid absolute inset-0 pointer-events-none z-[1]"
         style={{
           backgroundImage: `
-            linear-gradient(rgba(0,245,255,0.04) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(0,245,255,0.04) 1px, transparent 1px)
+            linear-gradient(rgba(0,184,255,0.04) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(0,184,255,0.04) 1px, transparent 1px)
           `,
           backgroundSize: "60px 60px",
         }}
@@ -45,7 +45,7 @@ export default function LoginForm() {
       {/* Línea de scan */}
       <div
         className="scan-line absolute left-0 right-0 h-px pointer-events-none z-[2]"
-        style={{ background: "linear-gradient(90deg, transparent, rgba(0,245,255,0.3), transparent)" }}
+        style={{ background: "linear-gradient(90deg, transparent, rgba(0,184,255,0.3), transparent)" }}
       />
 
       {/* ── Card de login ── */}
@@ -54,16 +54,16 @@ export default function LoginForm() {
         style={{
           background: "rgba(10,10,20,0.85)",
           backdropFilter: "blur(24px)",
-          border: "1px solid rgba(0,245,255,0.2)",
-          borderTopColor: "rgba(0,245,255,0.35)",
+          border: "1px solid rgba(0,184,255,0.2)",
+          borderTopColor: "rgba(0,184,255,0.35)",
           borderRadius: "1.75rem",
-          boxShadow: "var(--shadow-glass-lg), 0 0 60px rgba(0,245,255,0.08), 0 0 0 1px rgba(191,95,255,0.08) inset",
+          boxShadow: "var(--shadow-glass-lg), 0 0 60px rgba(0,184,255,0.08), 0 0 0 1px rgba(139,92,246,0.08) inset",
         }}
       >
         {/* Borde superior neon */}
         <div
           className="absolute top-0 left-8 right-8 h-px"
-          style={{ background: "linear-gradient(90deg, transparent, rgba(0,245,255,0.6), rgba(191,95,255,0.6), transparent)" }}
+          style={{ background: "linear-gradient(90deg, transparent, rgba(0,184,255,0.6), rgba(139,92,246,0.6), transparent)" }}
         />
 
         <div className="p-8">
@@ -94,10 +94,10 @@ export default function LoginForm() {
                 className="flex-1 py-2 rounded-lg text-sm font-semibold tracking-wide transition-all duration-300"
                 style={{
                   fontFamily: "var(--font-orbitron)",
-                  background: tab === t ? "rgba(0,245,255,0.12)" : "transparent",
-                  color: tab === t ? "var(--neon-cyan)" : "var(--text-muted)",
-                  boxShadow: tab === t ? "0 0 12px rgba(0,245,255,0.2)" : "none",
-                  border: tab === t ? "1px solid rgba(0,245,255,0.25)" : "1px solid transparent",
+                  background: tab === t ? "rgba(255,212,71,0.12)" : "transparent",
+                  color: tab === t ? "var(--neon-yellow)" : "var(--text-muted)",
+                  boxShadow: tab === t ? "0 0 12px rgba(255,212,71,0.2)" : "none",
+                  border: tab === t ? "1px solid rgba(255,212,71,0.3)" : "1px solid transparent",
                 }}
               >
                 {t === "login" ? "Ingresar" : "Registrarse"}
@@ -164,16 +164,16 @@ export default function LoginForm() {
               className="relative mt-2 w-full py-3 rounded-xl font-bold tracking-widest text-sm flex items-center justify-center gap-2 transition-all duration-300 overflow-hidden group"
               style={{
                 fontFamily: "var(--font-orbitron)",
-                background: "linear-gradient(135deg, rgba(0,245,255,0.15), rgba(191,95,255,0.15))",
-                color: "var(--neon-cyan)",
-                border: "1px solid rgba(0,245,255,0.4)",
-                boxShadow: "0 0 20px rgba(0,245,255,0.15)",
+                background: "linear-gradient(135deg, rgba(255,212,71,0.22), rgba(139,92,246,0.12))",
+                color: "var(--neon-yellow)",
+                border: "1px solid rgba(255,212,71,0.45)",
+                boxShadow: "0 0 20px rgba(255,212,71,0.18)",
               }}
             >
               {/* Hover overlay */}
               <span
                 className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                style={{ background: "linear-gradient(135deg, rgba(0,245,255,0.08), rgba(191,95,255,0.08))" }}
+                style={{ background: "linear-gradient(135deg, rgba(255,212,71,0.12), rgba(139,92,246,0.08))" }}
               />
 
               {loading ? (
@@ -209,7 +209,7 @@ export default function LoginForm() {
         {/* Borde inferior neon */}
         <div
           className="absolute bottom-0 left-8 right-8 h-px"
-          style={{ background: "linear-gradient(90deg, transparent, rgba(191,95,255,0.4), rgba(0,245,255,0.4), transparent)" }}
+          style={{ background: "linear-gradient(90deg, transparent, rgba(139,92,246,0.4), rgba(0,184,255,0.4), transparent)" }}
         />
       </div>
     </div>
@@ -233,9 +233,9 @@ function InputField({
       className="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300"
       style={{
         background: "rgba(255,255,255,0.04)",
-        border: `1px solid ${focused ? "rgba(0,245,255,0.5)" : "var(--border-glass)"}`,
+        border: `1px solid ${focused ? "rgba(0,184,255,0.5)" : "var(--border-glass)"}`,
         boxShadow: focused
-          ? "0 0 16px rgba(0,245,255,0.12), 0 1px 3px rgba(0,0,0,0.3) inset"
+          ? "0 0 16px rgba(0,184,255,0.12), 0 1px 3px rgba(0,0,0,0.3) inset"
           : "0 1px 3px rgba(0,0,0,0.3) inset",
       }}
     >

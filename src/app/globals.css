@@ -1,9 +1,11 @@
 @import "tailwindcss";
 
 :root {
-  /* Fondo */
-  --bg-base: #0a0a0f;
-  --bg-surface: #0f0f1a;
+  /* Fondo — paleta VORTEX 2026 */
+  --bg-base: #0a0b14;        /* negro azulado profundo */
+  --bg-night: #10182a;       /* azul noche */
+  --bg-violet-deep: #1a1033; /* morado oscuro */
+  --bg-surface: #10182a;
   --bg-card: rgba(255, 255, 255, 0.04);
   --bg-card-hover: rgba(255, 255, 255, 0.07);
 
@@ -11,22 +13,23 @@
   --border-glass: rgba(255, 255, 255, 0.08);
   --border-glass-hover: rgba(255, 255, 255, 0.16);
 
-  /* Neon colors */
-  --neon-cyan: #00f5ff;
-  --neon-violet: #bf5fff;
-  --neon-pink: #ff2d78;
-  --neon-green: #39ff14;
-  --neon-yellow: #ffe600;
+  /* Colores de marca — paleta VORTEX 2026 */
+  --neon-cyan: #00b8ff;       /* azul eléctrico */
+  --neon-cyan-soft: #67e8f9;  /* cian suave — apoyo */
+  --neon-violet: #8b5cf6;     /* morado neón principal */
+  --neon-pink: #ff4fd8;       /* magenta glow */
+  --neon-green: #39ff14;      /* funcional — estado "en emisión" / GDrive, fuera de la paleta de marca */
+  --neon-yellow: #ffd447;     /* amarillo retro/neón — uso 10%: CTA, estado activo, iconos clave */
 
   /* Servidores */
   --server-onedrive: #00a4ef;
   --server-gdrive: #39ff14;
-  --server-mega: #ff2d78;
+  --server-mega: #ff4fd8;
 
   /* Texto */
-  --text-primary: #e8e8f0;
-  --text-secondary: #8888aa;
-  --text-muted: #4a4a6a;
+  --text-primary: #eaeaf2;    /* blanco humo */
+  --text-secondary: #9ca3af;  /* gris */
+  --text-muted: #5b6472;
 
   --background: var(--bg-base);
   --foreground: var(--text-primary);
@@ -60,6 +63,7 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-neon-cyan: var(--neon-cyan);
+  --color-neon-cyan-soft: var(--neon-cyan-soft);
   --color-neon-violet: var(--neon-violet);
   --color-neon-pink: var(--neon-pink);
   --color-neon-green: var(--neon-green);
@@ -80,8 +84,9 @@ body {
   font-family: var(--font-inter), Arial, sans-serif;
   min-height: 100vh;
   background-image:
-    radial-gradient(ellipse 70% 50% at 15% -10%, rgba(191,95,255,0.08) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 50% at 90% 110%, rgba(0,245,255,0.06) 0%, transparent 60%);
+    radial-gradient(ellipse 70% 50% at 15% -10%, rgba(139,92,246,0.10) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 90% 110%, rgba(0,184,255,0.07) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 50% 50%, rgba(26,16,51,0.5) 0%, transparent 70%);
   background-attachment: fixed;
 }
 
@@ -154,15 +159,16 @@ body {
 }
 .input-glass:focus {
   outline: none;
-  border-color: rgba(0,245,255,0.45);
-  box-shadow: 0 0 0 3px rgba(0,245,255,0.08), 0 1px 3px rgba(0,0,0,0.3) inset;
+  border-color: rgba(0,184,255,0.45);
+  box-shadow: 0 0 0 3px rgba(0,184,255,0.08), 0 1px 3px rgba(0,0,0,0.3) inset;
 }
 
 /* Glow neon */
-.glow-cyan  { box-shadow: 0 0 12px rgba(0, 245, 255, 0.35); }
-.glow-violet { box-shadow: 0 0 12px rgba(191, 95, 255, 0.35); }
-.glow-pink  { box-shadow: 0 0 12px rgba(255, 45, 120, 0.35); }
+.glow-cyan  { box-shadow: 0 0 12px rgba(0, 184, 255, 0.35); }
+.glow-violet { box-shadow: 0 0 12px rgba(139, 92, 246, 0.35); }
+.glow-pink  { box-shadow: 0 0 12px rgba(255, 79, 216, 0.35); }
 .glow-green { box-shadow: 0 0 12px rgba(57, 255, 20, 0.35); }
+.glow-yellow { box-shadow: 0 0 12px rgba(255, 212, 71, 0.35); }
 
 /* Texto neon */
 .text-neon-cyan   { color: var(--neon-cyan); }
@@ -206,13 +212,13 @@ body {
 }
 
 @keyframes input-glow {
-  0%, 100% { box-shadow: 0 0 0px rgba(0,245,255,0); }
-  50%       { box-shadow: 0 0 8px rgba(0,245,255,0.4); }
+  0%, 100% { box-shadow: 0 0 0px rgba(0,184,255,0); }
+  50%       { box-shadow: 0 0 8px rgba(0,184,255,0.4); }
 }
 
 @keyframes logo-pulse {
-  0%, 100% { text-shadow: 0 0 10px rgba(0,245,255,0.6), 0 0 30px rgba(0,245,255,0.2); }
-  50%       { text-shadow: 0 0 20px rgba(0,245,255,0.9), 0 0 60px rgba(0,245,255,0.4); }
+  0%, 100% { text-shadow: 0 0 10px rgba(0,184,255,0.6), 0 0 30px rgba(0,184,255,0.2); }
+  50%       { text-shadow: 0 0 20px rgba(0,184,255,0.9), 0 0 60px rgba(0,184,255,0.4); }
 }
 
 @keyframes scan-line {

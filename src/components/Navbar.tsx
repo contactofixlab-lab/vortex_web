@@ -41,10 +41,10 @@ export default function Navbar() {
                   href={href}
                   className="px-4 py-1.5 rounded-full text-sm font-medium tracking-wide transition-all"
                   style={{
-                    color: active ? "var(--neon-cyan)" : "var(--text-secondary)",
-                    background: active ? "rgba(0,245,255,0.1)" : "transparent",
-                    border: active ? "1px solid rgba(0,245,255,0.3)" : "1px solid transparent",
-                    boxShadow: active ? "0 0 10px rgba(0,245,255,0.18)" : "none",
+                    color: active ? "var(--neon-yellow)" : "var(--text-secondary)",
+                    background: active ? "rgba(255,212,71,0.1)" : "transparent",
+                    border: active ? "1px solid rgba(255,212,71,0.3)" : "1px solid transparent",
+                    boxShadow: active ? "0 0 10px rgba(255,212,71,0.2)" : "none",
                   }}
                 >
                   {label}
@@ -85,9 +85,9 @@ export default function Navbar() {
               href="/login"
               className="hidden md:flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-semibold tracking-wide transition-all"
               style={{
-                color: "var(--neon-violet)",
-                border: "1px solid rgba(191,95,255,0.35)",
-                boxShadow: "0 0 10px rgba(191,95,255,0.15)",
+                color: "var(--neon-yellow)",
+                border: "1px solid rgba(255,212,71,0.4)",
+                boxShadow: "0 0 10px rgba(255,212,71,0.18)",
               }}
             >
               <User size={14} />
@@ -118,8 +118,8 @@ export default function Navbar() {
                 onClick={() => setOpen(false)}
                 className="py-2 px-3 rounded-lg text-sm font-medium"
                 style={{
-                  color: pathname === href ? "var(--neon-cyan)" : "var(--text-secondary)",
-                  background: pathname === href ? "rgba(0,245,255,0.06)" : "transparent",
+                  color: pathname === href ? "var(--neon-yellow)" : "var(--text-secondary)",
+                  background: pathname === href ? "rgba(255,212,71,0.08)" : "transparent",
                 }}
               >
                 {label}
@@ -129,7 +129,7 @@ export default function Navbar() {
               href="/login"
               onClick={() => setOpen(false)}
               className="py-2 px-3 rounded-lg text-sm font-medium"
-              style={{ color: "var(--neon-violet)" }}
+              style={{ color: "var(--neon-yellow)" }}
             >
               Ingresar
             </Link>
