@@ -70,16 +70,16 @@ export default function Hero({ items }: { items: Contenido[] }) {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
           >
-            <Link href={`/${TIPO_HREF[actual.tipo]}/${actual.slug}`} className="group flex flex-col md:flex-row gap-6 p-5 md:p-7">
-              {/* Imagen + nombre debajo */}
-              <div className="w-full md:w-56 shrink-0">
-                <div className="relative aspect-[2/3] rounded-2xl overflow-hidden mb-3">
+            <Link href={`/${TIPO_HREF[actual.tipo]}/${actual.slug}`} className="group grid grid-cols-1 md:grid-cols-[2fr_1fr] gap-6 p-5 md:p-7">
+              {/* Imagen (el doble de ancho que la descripción) + nombre debajo */}
+              <div>
+                <div className="relative aspect-[16/9] rounded-2xl overflow-hidden mb-3">
                   <Image
                     src={actual.portada}
                     alt={actual.titulo}
                     fill
                     className="object-cover transition-transform duration-500 group-hover:scale-105"
-                    sizes="(max-width: 768px) 100vw, 224px"
+                    sizes="(max-width: 768px) 100vw, 60vw"
                     priority
                   />
                 </div>
@@ -92,7 +92,7 @@ export default function Hero({ items }: { items: Contenido[] }) {
               </div>
 
               {/* Descripción a la derecha */}
-              <div className="flex-1 min-w-0 flex flex-col justify-center">
+              <div className="min-w-0 flex flex-col justify-center">
                 <span
                   className="inline-block w-fit text-[10px] font-bold tracking-widest px-2 py-0.5 rounded mb-3"
                   style={{ background: `${color}22`, color, border: `1px solid ${color}55`, fontFamily: "var(--font-orbitron)" }}
