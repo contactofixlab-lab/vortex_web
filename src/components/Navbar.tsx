@@ -1,9 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { Search, User, Menu, X } from "lucide-react";
-import { useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { Search, User, Menu, X, Heart, LogOut, ChevronDown } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { useAuth } from "./AuthProvider";
+import { cerrarSesion } from "@/app/actions";
 
 const LINKS = [
   { href: "/",          label: "Inicio"    },
@@ -14,8 +16,27 @@ const LINKS = [
 
 export default function Navbar() {
   const pathname = usePathname();
+  const router = useRouter();
+  const { usuario } = useAuth();
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function onOutside(e: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) setMenuOpen(false);
+    }
+    document.addEventListener("mousedown", onOutside);
+    return () => document.removeEventListener("mousedown", onOutside);
+  }, []);
+
+  async function handleLogout() {
+    setMenuOpen(false);
+    await cerrarSesion();
+    router.push("/");
+    router.refresh();
+  }
 
   return (
     <header className="sticky top-3 z-50 w-full px-3 md:px-6">
@@ -80,19 +101,61 @@ export default function Navbar() {
               )}
             </div>
 
-            {/* Login */}
-            <Link
-              href="/login"
-              className="hidden md:flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-semibold tracking-wide transition-all"
-              style={{
-                color: "var(--neon-yellow)",
-                border: "1px solid rgba(255,212,71,0.4)",
-                boxShadow: "0 0 10px rgba(255,212,71,0.18)",
-              }}
-            >
-              <User size={14} />
-              Ingresar
-            </Link>
+            {/* Sesión */}
+            {usuario ? (
+              <div ref={menuRef} className="hidden md:block relative">
+                <button
+                  onClick={() => setMenuOpen(o => !o)}
+                  className="flex items-center gap-2 px-3.5 py-1.5 rounded-full text-sm font-semibold tracking-wide transition-all"
+                  style={{
+                    color: "var(--neon-yellow)",
+                    border: "1px solid rgba(255,212,71,0.4)",
+                    boxShadow: "0 0 10px rgba(255,212,71,0.18)",
+                  }}
+                >
+                  <User size={14} />
+                  {usuario.nombre.split(" ")[0]}
+                  <ChevronDown size={13} style={{ transform: menuOpen ? "rotate(180deg)" : "none", transition: "transform 0.2s" }} />
+                </button>
+
+                {menuOpen && (
+                  <div
+                    className="glass-card absolute right-0 mt-2 w-48 rounded-2xl overflow-hidden py-1.5 z-50"
+                  >
+                    <Link
+                      href="/perfil"
+                      onClick={() => setMenuOpen(false)}
+                      className="flex items-center gap-2.5 px-4 py-2.5 text-sm transition-colors"
+                      style={{ color: "var(--text-secondary)" }}
+                    >
+                      <Heart size={14} />
+                      Mis favoritos
+                    </Link>
+                    <button
+                      onClick={handleLogout}
+                      className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm transition-colors text-left"
+                      style={{ color: "var(--neon-pink)" }}
+                    >
+                      <LogOut size={14} />
+                      Cerrar sesión
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <Link
+                href="/login"
+                className="hidden md:flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-semibold tracking-wide transition-all"
+                style={{
+                  color: "var(--neon-yellow)",
+                  border: "1px solid rgba(255,212,71,0.4)",
+                  boxShadow: "0 0 10px rgba(255,212,71,0.18)",
+                }}
+              >
+                <User size={14} />
+                Ingresar
+              </Link>
+            )}
 
             {/* Hamburger móvil */}
             <button
@@ -125,14 +188,34 @@ export default function Navbar() {
                 {label}
               </Link>
             ))}
-            <Link
-              href="/login"
-              onClick={() => setOpen(false)}
-              className="py-2 px-3 rounded-lg text-sm font-medium"
-              style={{ color: "var(--neon-yellow)" }}
-            >
-              Ingresar
-            </Link>
+            {usuario ? (
+              <>
+                <Link
+                  href="/perfil"
+                  onClick={() => setOpen(false)}
+                  className="py-2 px-3 rounded-lg text-sm font-medium flex items-center gap-2"
+                  style={{ color: "var(--neon-yellow)" }}
+                >
+                  <Heart size={14} /> Mis favoritos ({usuario.nombre.split(" ")[0]})
+                </Link>
+                <button
+                  onClick={() => { setOpen(false); handleLogout(); }}
+                  className="py-2 px-3 rounded-lg text-sm font-medium flex items-center gap-2 text-left"
+                  style={{ color: "var(--neon-pink)" }}
+                >
+                  <LogOut size={14} /> Cerrar sesión
+                </button>
+              </>
+            ) : (
+              <Link
+                href="/login"
+                onClick={() => setOpen(false)}
+                className="py-2 px-3 rounded-lg text-sm font-medium"
+                style={{ color: "var(--neon-yellow)" }}
+              >
+                Ingresar
+              </Link>
+            )}
           </div>
         )}
       </div>

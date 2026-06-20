@@ -2,23 +2,37 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Mail, Lock, Eye, EyeOff, User, ArrowRight, Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Mail, Lock, Eye, EyeOff, User, ArrowRight, Loader2, AlertCircle } from "lucide-react";
 import AnimeBackground from "./AnimeBackground";
+import { iniciarSesion, registrarUsuario } from "@/app/actions";
 
 type Tab = "login" | "registro";
 
 export default function LoginForm() {
+  const router = useRouter();
   const [tab, setTab]             = useState<Tab>("login");
   const [showPass, setShowPass]   = useState(false);
   const [loading, setLoading]     = useState(false);
   const [email, setEmail]         = useState("");
   const [password, setPassword]   = useState("");
   const [nombre, setNombre]       = useState("");
+  const [error, setError]         = useState<string | null>(null);
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    setError(null);
     setLoading(true);
-    setTimeout(() => setLoading(false), 2000);
+    const result = tab === "login"
+      ? await iniciarSesion(email, password)
+      : await registrarUsuario(nombre, email, password);
+    if (!result.ok) {
+      setError(result.error);
+      setLoading(false);
+      return;
+    }
+    router.push("/");
+    router.refresh();
   }
 
   return (
@@ -90,7 +104,7 @@ export default function LoginForm() {
             {(["login", "registro"] as Tab[]).map((t) => (
               <button
                 key={t}
-                onClick={() => setTab(t)}
+                onClick={() => { setTab(t); setError(null); }}
                 className="flex-1 py-2 rounded-lg text-sm font-semibold tracking-wide transition-all duration-300"
                 style={{
                   fontFamily: "var(--font-orbitron)",
@@ -146,6 +160,17 @@ export default function LoginForm() {
                 {showPass ? <EyeOff size={16} /> : <Eye size={16} />}
               </button>
             </div>
+
+            {/* Error */}
+            {error && (
+              <div
+                className="flex items-center gap-2 px-3.5 py-2.5 rounded-xl text-xs"
+                style={{ background: "rgba(255,79,216,0.1)", border: "1px solid rgba(255,79,216,0.3)", color: "var(--neon-pink)" }}
+              >
+                <AlertCircle size={14} style={{ flexShrink: 0 }} />
+                {error}
+              </div>
+            )}
 
             {/* Olvidé contraseña (solo login) */}
             {tab === "login" && (

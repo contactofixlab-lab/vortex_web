@@ -3,9 +3,10 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ChevronDown, ChevronLeft, PlayCircle, ListVideo } from "lucide-react";
+import { ChevronDown, ChevronLeft, PlayCircle, ListVideo, Heart } from "lucide-react";
 import type { Contenido } from "@/lib/contenido";
 import type { Temporada } from "@/lib/detalle";
+import { useAuth } from "./AuthProvider";
 
 const TIPO_COLOR: Record<string, string> = {
   anime: "var(--neon-violet)",
@@ -43,6 +44,8 @@ const SERVIDORES = [
 export default function DetalleSerieAnime({ item, temporadas }: { item: Contenido; temporadas: Temporada[] }) {
   const [tab, setTab] = useState<TabKey>("descripcion");
   const [temporadaAbierta, setTemporadaAbierta] = useState(1);
+  const { usuario, isFavorito, toggleFavorito } = useAuth();
+  const favorito = isFavorito(item.id);
 
   const color = TIPO_COLOR[item.tipo] ?? "var(--neon-cyan)";
 
@@ -86,9 +89,26 @@ export default function DetalleSerieAnime({ item, temporadas }: { item: Contenid
             )}
           </div>
 
-          <h1 className="text-2xl md:text-3xl font-black leading-tight mb-4" style={{ fontFamily: "var(--font-orbitron)", color: "var(--text-primary)" }}>
-            {item.titulo}
-          </h1>
+          <div className="flex items-center gap-3 mb-4">
+            <h1 className="text-2xl md:text-3xl font-black leading-tight" style={{ fontFamily: "var(--font-orbitron)", color: "var(--text-primary)" }}>
+              {item.titulo}
+            </h1>
+            {usuario && (
+              <button
+                type="button"
+                onClick={() => toggleFavorito(item.id)}
+                className="flex items-center justify-center rounded-full shrink-0 transition-transform hover:scale-110"
+                style={{
+                  width: 36, height: 36,
+                  background: favorito ? "rgba(255,79,216,0.15)" : "rgba(255,255,255,0.05)",
+                  border: `1px solid ${favorito ? "var(--neon-pink)" : "var(--border-glass)"}`,
+                }}
+                aria-label={favorito ? "Quitar de favoritos" : "Agregar a favoritos"}
+              >
+                <Heart size={16} fill={favorito ? "var(--neon-pink)" : "none"} style={{ color: favorito ? "var(--neon-pink)" : "var(--text-secondary)" }} />
+              </button>
+            )}
+          </div>
 
           {/* Subsecciones — tabs modernos: solo una visible a la vez */}
           <div className="flex gap-2 mb-4 flex-wrap">

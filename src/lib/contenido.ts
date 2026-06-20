@@ -79,3 +79,14 @@ export async function getContenidoBySlug(tipo: "anime" | "serie" | "pelicula", s
   const rows = (await sql`SELECT ${sql.unsafe(SELECT_COLUMNS)} FROM contenido WHERE tipo = ${tipo} AND slug = ${slug} AND estado_publicacion = 'on' LIMIT 1`) as ContenidoRow[];
   return rows[0] ? mapRow(rows[0]) : null;
 }
+
+export async function getFavoritos(usuarioId: number): Promise<Contenido[]> {
+  const rows = (await sql`
+    SELECT c.id, c.tipo, c.titulo, c.slug, c.portada, c.sinopsis, c.anio, c.genero, c.idioma, c.episodios_total, c.estado_emision, c.vistas
+    FROM favorito f
+    JOIN contenido c ON c.id = f.contenido_id
+    WHERE f.usuario_id = ${usuarioId} AND c.estado_publicacion = 'on'
+    ORDER BY f.created_at DESC
+  `) as ContenidoRow[];
+  return rows.map(mapRow);
+}

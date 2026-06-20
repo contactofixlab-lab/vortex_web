@@ -1,6 +1,10 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
+import { Heart } from "lucide-react";
 import type { Contenido } from "@/lib/contenido";
+import { useAuth } from "./AuthProvider";
 
 const TIPO_COLOR: Record<string, string> = {
   anime:    "var(--neon-violet)",
@@ -23,6 +27,8 @@ const ESTADO_COLOR: Record<string, string> = {
 export default function ContentCard({ item }: { item: Contenido }) {
   const color = TIPO_COLOR[item.tipo];
   const href  = `/${item.tipo === "pelicula" ? "peliculas" : item.tipo}/${item.slug}`;
+  const { usuario, isFavorito, toggleFavorito } = useAuth();
+  const favorito = isFavorito(item.id);
 
   return (
     <Link href={href} className="group block">
@@ -54,6 +60,24 @@ export default function ContentCard({ item }: { item: Contenido }) {
           >
             {TIPO_LABEL[item.tipo]}
           </span>
+
+          {/* Favorito */}
+          {usuario && (
+            <button
+              type="button"
+              onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggleFavorito(item.id); }}
+              className="absolute bottom-2 right-2 z-10 flex items-center justify-center rounded-full transition-all"
+              style={{
+                width: 28, height: 28,
+                background: "rgba(0,0,0,0.55)",
+                backdropFilter: "blur(6px)",
+                border: `1px solid ${favorito ? "var(--neon-pink)" : "rgba(255,255,255,0.2)"}`,
+              }}
+              aria-label={favorito ? "Quitar de favoritos" : "Agregar a favoritos"}
+            >
+              <Heart size={13} fill={favorito ? "var(--neon-pink)" : "none"} style={{ color: favorito ? "var(--neon-pink)" : "#fff" }} />
+            </button>
+          )}
 
           {/* Badge estado */}
           {item.estado && (

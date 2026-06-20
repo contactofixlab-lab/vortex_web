@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Orbitron, Inter } from "next/font/google";
 import SiteShell from "@/components/SiteShell";
+import { AuthProvider } from "@/components/AuthProvider";
+import { getSesion } from "@/lib/auth";
+import { getFavoritoIds } from "@/lib/favoritos";
 import "./globals.css";
 
 const orbitron = Orbitron({
@@ -19,15 +22,20 @@ export const metadata: Metadata = {
   description: "Tu portal de descargas de series, películas y anime en español.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const usuario = await getSesion();
+  const favoritoIds = usuario ? await getFavoritoIds(usuario.id) : [];
+
   return (
     <html lang="es" className={`${orbitron.variable} ${inter.variable} h-full`}>
       <body className="min-h-full flex flex-col antialiased" style={{ background: "var(--bg-base)" }}>
-        <SiteShell>{children}</SiteShell>
+        <AuthProvider usuario={usuario} favoritoIds={favoritoIds}>
+          <SiteShell>{children}</SiteShell>
+        </AuthProvider>
       </body>
     </html>
   );
