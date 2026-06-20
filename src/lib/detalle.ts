@@ -1,9 +1,9 @@
-import type { Contenido } from "./placeholder-data";
+import { sql } from "./db";
 
 export type Servidores = {
-  onedrive?: boolean;
-  gdrive?: boolean;
-  mega?: boolean;
+  onedrive?: string;
+  gdrive?: string;
+  mega?: string;
 };
 
 export type Episodio = {
@@ -19,37 +19,41 @@ export type Temporada = {
   episodios: Episodio[];
 };
 
-const MAX_EPISODIOS_DEMO = 16;
+type EpisodioRow = {
+  temporada: number;
+  numero: number;
+  titulo: string | null;
+  duracion: string | null;
+  urls: Servidores | null;
+};
 
 /**
- * Servidores de descarga — hoy es un placeholder con los 3 habilitados.
- * Cuando exista backend real esto debe venir de la tabla `links_descarga`
- * por episodio/contenido (ver PLAN.md), sin tocar el resto del componente.
+ * Trae las temporadas/episodios reales cargados desde vortex-admin para un
+ * contenido. Si todavía no se cargó ningún episodio, devuelve un arreglo vacío
+ * (la ficha de detalle simplemente no muestra el bloque de episodios).
  */
-export function servidoresDemo(): Servidores {
-  return { onedrive: true, gdrive: true, mega: true };
-}
+export async function getTemporadas(contenidoId: number): Promise<Temporada[]> {
+  const rows = (await sql`
+    SELECT temporada, numero, titulo, duracion, urls
+    FROM episodio
+    WHERE contenido_id = ${contenidoId}
+    ORDER BY temporada ASC, numero ASC
+  `) as EpisodioRow[];
 
-/**
- * Genera la(s) temporada(s) de una ficha a partir del conteo `episodios` del
- * catálogo. Hoy cada ficha del catálogo representa una sola temporada, así que
- * siempre arma 1 bloque — pero el acordeón soporta varias, listo para cuando el
- * modelo de datos agrupe varias temporadas bajo una misma ficha.
- * Tope de MAX_EPISODIOS_DEMO filas para no inflar la página con catálogos
- * de cientos de episodios (ej. One Piece).
- */
-export function temporadasDemo(item: Contenido): Temporada[] {
-  const total = Math.min(item.episodios ?? 1, MAX_EPISODIOS_DEMO);
-  return [
-    {
-      numero: 1,
-      titulo: "Temporada 1",
-      episodios: Array.from({ length: total }, (_, i) => ({
-        numero: i + 1,
-        titulo: `Episodio ${i + 1}`,
-        duracion: "24 min",
-        servidores: servidoresDemo(),
-      })),
-    },
-  ];
+  const porTemporada = new Map<number, Episodio[]>();
+  for (const row of rows) {
+    const episodio: Episodio = {
+      numero: row.numero,
+      titulo: row.titulo ?? `Episodio ${row.numero}`,
+      duracion: row.duracion ?? "",
+      servidores: row.urls ?? {},
+    };
+    const lista = porTemporada.get(row.temporada) ?? [];
+    lista.push(episodio);
+    porTemporada.set(row.temporada, lista);
+  }
+
+  return [...porTemporada.entries()]
+    .sort(([a], [b]) => a - b)
+    .map(([numero, episodios]) => ({ numero, titulo: `Temporada ${numero}`, episodios }));
 }

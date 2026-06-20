@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 import ContentCard from "./ContentCard";
-import type { Contenido } from "@/lib/placeholder-data";
+import type { Contenido } from "@/lib/contenido";
 
 type Props = {
   titulo: string;

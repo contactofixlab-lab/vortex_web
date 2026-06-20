@@ -1,20 +1,22 @@
 import { notFound } from "next/navigation";
-import { ANIMES } from "@/lib/placeholder-data";
+import { getContenidoBySlug } from "@/lib/contenido";
+import { getTemporadas } from "@/lib/detalle";
 import DetalleSerieAnime from "@/components/DetalleSerieAnime";
 
-export function generateStaticParams() {
-  return ANIMES.map((a) => ({ slug: a.slug }));
-}
+export const revalidate = 0;
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const item = ANIMES.find((a) => a.slug === slug);
+  const item = await getContenidoBySlug("anime", slug);
   return { title: item ? `${item.titulo} — Vortex` : "Anime — Vortex" };
 }
 
 export default async function AnimeDetallePage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const item = ANIMES.find((a) => a.slug === slug);
+  const item = await getContenidoBySlug("anime", slug);
   if (!item) notFound();
-  return <DetalleSerieAnime item={item} />;
+
+  const temporadas = await getTemporadas(Number(item.id));
+
+  return <DetalleSerieAnime item={item} temporadas={temporadas} />;
 }

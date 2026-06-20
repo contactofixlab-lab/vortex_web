@@ -1,14 +1,17 @@
 import ContentCard from "@/components/ContentCard";
 import FiltersPanel from "@/components/FiltersPanel";
-import { PELICULAS } from "@/lib/placeholder-data";
+import { getPeliculas } from "@/lib/contenido";
 
 export const metadata = { title: "Películas — Vortex" };
+export const revalidate = 0;
 
 const GENEROS = ["Todos", "Acción", "Animación", "Comedia", "Drama", "Terror", "Ciencia ficción", "Historia"];
 const AÑOS = ["Todos", "2025", "2024", "2023", "2022"];
 const IDIOMAS = ["Todos", "Sub español", "Latino", "Castellano", "Dual"];
 
-export default function PeliculasPage() {
+export default async function PeliculasPage() {
+  const PELICULAS = await getPeliculas();
+
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
 

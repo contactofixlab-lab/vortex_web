@@ -1,14 +1,17 @@
 import ContentCard from "@/components/ContentCard";
 import FiltersPanel from "@/components/FiltersPanel";
-import { ANIMES } from "@/lib/placeholder-data";
+import { getAnimes } from "@/lib/contenido";
 
 export const metadata = { title: "Anime — Vortex" };
+export const revalidate = 0;
 
 const GENEROS = ["Todos", "Acción", "Aventura", "Comedia", "Drama", "Fantasía", "Deportes", "Sobrenatural"];
 const AÑOS = ["Todos", "2024", "2023", "2022", "2021", "2020"];
 const IDIOMAS = ["Todos", "Sub español", "Latino", "Castellano", "Dual"];
 
-export default function AnimePage() {
+export default async function AnimePage() {
+  const ANIMES = await getAnimes();
+
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
 

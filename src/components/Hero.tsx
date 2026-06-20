@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import { Flame } from "lucide-react";
-import type { Contenido } from "@/lib/placeholder-data";
+import type { Contenido } from "@/lib/contenido";
 
 const TIPO_HREF: Record<string, string> = {
   anime:    "anime",

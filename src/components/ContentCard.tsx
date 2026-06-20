@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import type { Contenido } from "@/lib/placeholder-data";
+import type { Contenido } from "@/lib/contenido";
 
 const TIPO_COLOR: Record<string, string> = {
   anime:    "var(--neon-violet)",

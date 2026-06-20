@@ -1,14 +1,17 @@
 import ContentCard from "@/components/ContentCard";
 import FiltersPanel from "@/components/FiltersPanel";
-import { SERIES } from "@/lib/placeholder-data";
+import { getSeries } from "@/lib/contenido";
 
 export const metadata = { title: "Series — Vortex" };
+export const revalidate = 0;
 
 const GENEROS = ["Todos", "Acción", "Comedia", "Drama", "Terror", "Ciencia ficción", "Historia", "Misterio"];
 const AÑOS = ["Todos", "2025", "2024", "2023", "2022", "2021", "2020"];
 const IDIOMAS = ["Todos", "Sub español", "Latino", "Castellano", "Dual"];
 
-export default function SeriesPage() {
+export default async function SeriesPage() {
+  const SERIES = await getSeries();
+
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
 

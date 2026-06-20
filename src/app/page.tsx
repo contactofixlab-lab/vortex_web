@@ -1,19 +1,28 @@
 import Hero from "@/components/Hero";
 import ContentSection from "@/components/ContentSection";
-import { ANIMES, SERIES, PELICULAS, DESTACADOS } from "@/lib/placeholder-data";
+import { getAnimes, getSeries, getPeliculas, getDestacados } from "@/lib/contenido";
 
-export default function Home() {
+export const revalidate = 0;
+
+export default async function Home() {
+  const [destacados, animes, series, peliculas] = await Promise.all([
+    getDestacados(6),
+    getAnimes(),
+    getSeries(),
+    getPeliculas(),
+  ]);
+
   return (
     <div className="max-w-7xl mx-auto px-4 py-6 flex flex-col gap-10">
       {/* Hero — Destacados */}
-      <Hero items={DESTACADOS} />
+      <Hero items={destacados} />
 
       {/* Sección Anime */}
       <ContentSection
         titulo="ANIME"
         color="var(--neon-violet)"
         href="/anime"
-        items={ANIMES}
+        items={animes}
       />
 
       {/* Sección Series */}
@@ -21,7 +30,7 @@ export default function Home() {
         titulo="SERIES"
         color="var(--neon-cyan)"
         href="/series"
-        items={SERIES}
+        items={series}
       />
 
       {/* Sección Películas */}
@@ -29,7 +38,7 @@ export default function Home() {
         titulo="PELÍCULAS"
         color="var(--neon-pink)"
         href="/peliculas"
-        items={PELICULAS}
+        items={peliculas}
       />
     </div>
   );

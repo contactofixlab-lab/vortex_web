@@ -3,9 +3,9 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ChevronDown, ChevronLeft, PlayCircle } from "lucide-react";
-import type { Contenido } from "@/lib/placeholder-data";
-import { temporadasDemo } from "@/lib/detalle";
+import { ChevronDown, ChevronLeft, PlayCircle, ListVideo } from "lucide-react";
+import type { Contenido } from "@/lib/contenido";
+import type { Temporada } from "@/lib/detalle";
 
 const TIPO_COLOR: Record<string, string> = {
   anime: "var(--neon-violet)",
@@ -40,12 +40,11 @@ const SERVIDORES = [
   { key: "mega", label: "Mega", color: "var(--server-mega)" },
 ] as const;
 
-export default function DetalleSerieAnime({ item }: { item: Contenido }) {
+export default function DetalleSerieAnime({ item, temporadas }: { item: Contenido; temporadas: Temporada[] }) {
   const [tab, setTab] = useState<TabKey>("descripcion");
   const [temporadaAbierta, setTemporadaAbierta] = useState(1);
 
   const color = TIPO_COLOR[item.tipo] ?? "var(--neon-cyan)";
-  const temporadas = temporadasDemo(item);
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-8">
@@ -160,6 +159,16 @@ export default function DetalleSerieAnime({ item }: { item: Contenido }) {
         </h2>
       </div>
 
+      {temporadas.length === 0 && (
+        <div
+          className="glass-card rounded-2xl flex flex-col items-center justify-center gap-2 py-10"
+          style={{ color: "var(--text-muted)" }}
+        >
+          <ListVideo size={28} style={{ opacity: 0.4 }} />
+          <span className="text-sm">Todavía no hay episodios cargados para este título.</span>
+        </div>
+      )}
+
       <div className="flex flex-col gap-3">
         {temporadas.map((temp) => {
           const abierta = temporadaAbierta === temp.numero;
@@ -197,15 +206,20 @@ export default function DetalleSerieAnime({ item }: { item: Contenido }) {
                       </div>
                       <div className="flex items-center gap-1.5 shrink-0">
                         {SERVIDORES.filter((s) => ep.servidores[s.key]).map((s) => (
-                          <button
+                          <a
                             key={s.key}
-                            type="button"
+                            href={ep.servidores[s.key]}
+                            target="_blank"
+                            rel="noopener noreferrer"
                             className="text-[10px] font-bold px-2.5 py-1 rounded-lg transition-transform hover:-translate-y-0.5"
                             style={{ background: `${s.color}1f`, color: s.color, border: `1px solid ${s.color}55` }}
                           >
                             {s.label}
-                          </button>
+                          </a>
                         ))}
+                        {SERVIDORES.every((s) => !ep.servidores[s.key]) && (
+                          <span className="text-[10px]" style={{ color: "var(--text-muted)" }}>Sin servidores cargados</span>
+                        )}
                       </div>
                     </div>
                   ))}
