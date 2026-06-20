@@ -42,11 +42,11 @@ export default function Navbar() {
   return (
     <header className="sticky top-3 z-50 w-full px-3 md:px-6">
       <div className="glass-nav max-w-7xl mx-auto rounded-2xl">
-        <div className="px-4 h-16 flex items-center justify-between gap-6">
+        <div className="px-4 flex items-center justify-between gap-6" style={{ height: "6rem" }}>
 
           {/* Logo */}
-          <Link href="/" className="relative flex-shrink-0" style={{ width: 40, height: 40 }}>
-            <Image src="/vortex logo.png" alt="Vortex" fill sizes="40px" style={{ objectFit: "contain" }} />
+          <Link href="/" className="relative flex-shrink-0" style={{ width: 80, height: 80 }}>
+            <Image src="/vortex logo.png" alt="Vortex" fill sizes="80px" style={{ objectFit: "contain" }} />
           </Link>
 
           {/* Nav links — desktop */}
