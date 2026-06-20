@@ -1,0 +1,229 @@
+"use client";
+
+import { useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { ChevronDown, ChevronLeft, PlayCircle } from "lucide-react";
+import type { Contenido } from "@/lib/placeholder-data";
+import { temporadasDemo } from "@/lib/detalle";
+
+const TIPO_COLOR: Record<string, string> = {
+  anime: "var(--neon-violet)",
+  serie: "var(--neon-cyan)",
+};
+
+const TIPO_LABEL: Record<string, string> = {
+  anime: "ANIME",
+  serie: "SERIE",
+};
+
+const TIPO_BACK: Record<string, string> = {
+  anime: "/anime",
+  serie: "/series",
+};
+
+const TIPO_BACK_LABEL: Record<string, string> = {
+  anime: "anime",
+  serie: "series",
+};
+
+const TABS = [
+  { key: "descripcion", label: "Descripción" },
+  { key: "ficha", label: "Ficha técnica" },
+  { key: "trailer", label: "Tráiler" },
+] as const;
+type TabKey = (typeof TABS)[number]["key"];
+
+const SERVIDORES = [
+  { key: "onedrive", label: "OneDrive", color: "var(--server-onedrive)" },
+  { key: "gdrive", label: "Google Drive", color: "var(--server-gdrive)" },
+  { key: "mega", label: "Mega", color: "var(--server-mega)" },
+] as const;
+
+export default function DetalleSerieAnime({ item }: { item: Contenido }) {
+  const [tab, setTab] = useState<TabKey>("descripcion");
+  const [temporadaAbierta, setTemporadaAbierta] = useState(1);
+
+  const color = TIPO_COLOR[item.tipo] ?? "var(--neon-cyan)";
+  const temporadas = temporadasDemo(item);
+
+  return (
+    <div className="max-w-5xl mx-auto px-4 py-8">
+      <Link
+        href={TIPO_BACK[item.tipo] ?? "/"}
+        className="inline-flex items-center gap-1 text-sm mb-5 transition-colors"
+        style={{ color: "var(--text-secondary)" }}
+      >
+        <ChevronLeft size={16} /> Volver a {TIPO_BACK_LABEL[item.tipo] ?? item.tipo}
+      </Link>
+
+      {/* Bloque superior: poster + info con subsecciones (tabs) */}
+      <div className="glass-card rounded-3xl p-5 md:p-7 flex flex-col md:flex-row gap-6 mb-8">
+        {/* Poster */}
+        <div className="relative w-full md:w-56 aspect-[2/3] shrink-0 rounded-2xl overflow-hidden">
+          <Image
+            src={item.portada}
+            alt={item.titulo}
+            fill
+            className="object-cover"
+            sizes="(max-width: 768px) 100vw, 224px"
+            priority
+          />
+        </div>
+
+        {/* Info */}
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2 mb-3 flex-wrap">
+            <span
+              className="text-[10px] font-bold tracking-widest px-2 py-0.5 rounded"
+              style={{ background: `${color}22`, color, border: `1px solid ${color}55`, fontFamily: "var(--font-orbitron)" }}
+            >
+              {TIPO_LABEL[item.tipo]}
+            </span>
+            {item.estado && (
+              <span className="text-[10px] font-semibold px-2 py-0.5 rounded" style={{ background: "rgba(0,0,0,0.4)", color: "var(--neon-green)" }}>
+                {item.estado}
+              </span>
+            )}
+          </div>
+
+          <h1 className="text-2xl md:text-3xl font-black leading-tight mb-4" style={{ fontFamily: "var(--font-orbitron)", color: "var(--text-primary)" }}>
+            {item.titulo}
+          </h1>
+
+          {/* Subsecciones — tabs modernos: solo una visible a la vez */}
+          <div className="flex gap-2 mb-4 flex-wrap">
+            {TABS.map((t) => {
+              const active = tab === t.key;
+              return (
+                <button
+                  key={t.key}
+                  onClick={() => setTab(t.key)}
+                  className="px-4 py-1.5 rounded-full text-sm font-semibold tracking-wide transition-all"
+                  style={{
+                    fontFamily: "var(--font-orbitron)",
+                    color: active ? "var(--neon-yellow)" : "var(--text-secondary)",
+                    background: active ? "rgba(255,212,71,0.12)" : "rgba(255,255,255,0.04)",
+                    border: active ? "1px solid rgba(255,212,71,0.3)" : "1px solid var(--border-glass)",
+                    boxShadow: active ? "0 0 10px rgba(255,212,71,0.18)" : "none",
+                  }}
+                >
+                  {t.label}
+                </button>
+              );
+            })}
+          </div>
+
+          {tab === "descripcion" && (
+            <div>
+              <p className="text-sm mb-4" style={{ color: "var(--text-secondary)" }}>
+                {item.descripcion}
+              </p>
+              <div className="flex items-center gap-2 flex-wrap">
+                {item.genero.map((g) => (
+                  <span key={g} className="text-xs px-2 py-0.5 rounded-full" style={{ background: "rgba(255,255,255,0.06)", color: "var(--text-secondary)" }}>
+                    {g}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {tab === "ficha" && (
+            <dl className="grid grid-cols-2 sm:grid-cols-3 gap-x-6 gap-y-3 text-sm">
+              <Ficha label="Tipo" value={TIPO_LABEL[item.tipo] ?? item.tipo} />
+              <Ficha label="Año" value={String(item.año)} />
+              <Ficha label="Idioma" value={item.idioma} />
+              {item.estado && <Ficha label="Estado" value={item.estado} />}
+              {item.episodios !== undefined && <Ficha label="Episodios" value={String(item.episodios)} />}
+              <Ficha label="Géneros" value={item.genero.join(", ")} />
+            </dl>
+          )}
+
+          {tab === "trailer" && (
+            <div
+              className="rounded-xl flex flex-col items-center justify-center gap-2 py-10"
+              style={{ background: "rgba(255,255,255,0.03)", border: "1px dashed var(--border-glass)" }}
+            >
+              <PlayCircle size={28} style={{ color: "var(--text-muted)" }} />
+              <span className="text-sm" style={{ color: "var(--text-muted)" }}>Tráiler próximamente</span>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Acordeón de temporadas */}
+      <div className="flex items-center gap-3 mb-4">
+        <div className="w-1 h-6 rounded-full" style={{ background: color, boxShadow: `0 0 8px ${color}` }} />
+        <h2 className="text-lg font-bold tracking-widest" style={{ fontFamily: "var(--font-orbitron)", color }}>
+          EPISODIOS
+        </h2>
+      </div>
+
+      <div className="flex flex-col gap-3">
+        {temporadas.map((temp) => {
+          const abierta = temporadaAbierta === temp.numero;
+          return (
+            <div key={temp.numero} className="glass-card rounded-2xl overflow-hidden">
+              <button
+                onClick={() => setTemporadaAbierta(abierta ? -1 : temp.numero)}
+                className="w-full flex items-center justify-between px-5 py-4 text-left"
+              >
+                <span className="font-bold text-sm" style={{ color: "var(--text-primary)", fontFamily: "var(--font-orbitron)" }}>
+                  {temp.titulo}{" "}
+                  <span className="font-normal" style={{ color: "var(--text-muted)" }}>
+                    · {temp.episodios.length} ep.
+                  </span>
+                </span>
+                <ChevronDown
+                  size={18}
+                  style={{ color: "var(--text-secondary)", transform: abierta ? "rotate(180deg)" : "none", transition: "transform 0.2s" }}
+                />
+              </button>
+
+              {abierta && (
+                <div className="px-5 pb-4 flex flex-col gap-2">
+                  {temp.episodios.map((ep) => (
+                    <div
+                      key={ep.numero}
+                      className="flex items-center justify-between gap-3 rounded-xl px-4 py-2.5"
+                      style={{ background: "rgba(255,255,255,0.03)" }}
+                    >
+                      <div className="min-w-0">
+                        <p className="text-sm font-semibold truncate" style={{ color: "var(--text-primary)" }}>
+                          {ep.numero}. {ep.titulo}
+                        </p>
+                        <p className="text-xs" style={{ color: "var(--text-muted)" }}>{ep.duracion}</p>
+                      </div>
+                      <div className="flex items-center gap-1.5 shrink-0">
+                        {SERVIDORES.filter((s) => ep.servidores[s.key]).map((s) => (
+                          <button
+                            key={s.key}
+                            type="button"
+                            className="text-[10px] font-bold px-2.5 py-1 rounded-lg transition-transform hover:-translate-y-0.5"
+                            style={{ background: `${s.color}1f`, color: s.color, border: `1px solid ${s.color}55` }}
+                          >
+                            {s.label}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function Ficha({ label, value }: { label: string; value: string }) {
+  return (
+    <div>
+      <dt className="text-xs mb-0.5" style={{ color: "var(--text-muted)" }}>{label}</dt>
+      <dd style={{ color: "var(--text-primary)" }}>{value}</dd>
+    </div>
+  );
+}
