@@ -24,7 +24,7 @@ export default function CommentSection({ contenidoId, comentariosIniciales }: Co
   const [comentarios, setComentarios] = useState<Comentario[]>(comentariosIniciales);
   const [texto, setTexto] = useState("");
   const [cargando, setCargando] = useState(false);
-  const [expanded, setExpanded] = useState(false);
+  const [expanded, setExpanded] = useState(false || usuario !== null); // Expandir si está logueado
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -71,90 +71,112 @@ export default function CommentSection({ contenidoId, comentariosIniciales }: Co
       {expanded && (
         <>
           {usuario ? (
-            <form onSubmit={handleSubmit} className="mb-6 flex flex-col gap-2">
-              <textarea
-                value={texto}
-                onChange={(e) => setTexto(e.target.value)}
-                placeholder="Comparte tu opinión..."
-                maxLength={300}
-                className="w-full px-3 py-2 rounded-lg bg-transparent border text-sm resize-none"
-                style={{ borderColor: "rgba(255,255,255,0.1)", color: "var(--text-primary)" }}
-                rows={3}
-              />
-              <div className="flex items-center justify-between">
-                <span className="text-xs" style={{ color: "var(--text-muted)" }}>
-                  {texto.length}/300
-                </span>
+            <form onSubmit={handleSubmit} className="mb-6 gap-2 flex items-end gap-2">
+              {usuario.avatar_url ? (
+                <img
+                  src={usuario.avatar_url}
+                  alt={usuario.nombre}
+                  className="w-9 h-9 rounded-full object-cover flex-shrink-0"
+                />
+              ) : (
+                <div
+                  className="w-9 h-9 rounded-full flex-shrink-0 flex items-center justify-center text-xs font-bold"
+                  style={{ background: "rgba(0,184,255,0.2)", color: "var(--neon-cyan)" }}
+                >
+                  {usuario.nombre.charAt(0).toUpperCase()}
+                </div>
+              )}
+              <div className="flex-1 flex items-end gap-2">
+                <div className="flex-1 flex flex-col">
+                  <textarea
+                    value={texto}
+                    onChange={(e) => setTexto(e.target.value)}
+                    placeholder="Escribe un comentario..."
+                    maxLength={300}
+                    className="w-full px-3 py-2 rounded-lg bg-transparent border text-sm resize-none"
+                    style={{ borderColor: "rgba(255,255,255,0.1)", color: "var(--text-primary)" }}
+                    rows={2}
+                  />
+                  <div className="flex items-center justify-end mt-1">
+                    <span className="text-xs" style={{ color: "var(--text-muted)" }}>
+                      {texto.length}/300
+                    </span>
+                  </div>
+                </div>
                 <button
                   type="submit"
                   disabled={cargando || !texto.trim()}
-                  className="px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-2 transition-all"
+                  className="px-2.5 py-2 rounded-lg text-xs font-semibold flex items-center justify-center transition-all flex-shrink-0"
                   style={{
                     background: "rgba(57,255,20,0.2)",
                     border: "1px solid rgba(57,255,20,0.3)",
                     color: "#39ff14",
                     opacity: cargando || !texto.trim() ? 0.5 : 1,
                     cursor: cargando || !texto.trim() ? "not-allowed" : "pointer",
+                    width: 36,
+                    height: 36,
                   }}
+                  title="Enviar comentario"
                 >
-                  <Send size={12} /> {cargando ? "Enviando..." : "Comentar"}
+                  <Send size={14} />
                 </button>
               </div>
             </form>
           ) : (
-            <div className="mb-6 p-3 rounded-lg text-xs" style={{ background: "rgba(255,212,71,0.1)", color: "var(--neon-yellow)" }}>
-              Inicia sesión para comentar
+            <div className="mb-6 p-4 rounded-lg text-sm text-center" style={{ background: "rgba(255,212,71,0.1)", color: "var(--neon-yellow)" }}>
+              🔐 Inicia sesión para comentar y compartir tu opinión
             </div>
           )}
 
           {comentarios.length === 0 ? (
-            <p className="text-xs" style={{ color: "var(--text-muted)" }}>
-              Sé el primero en comentar
+            <p className="text-sm text-center py-6" style={{ color: "var(--text-muted)" }}>
+              Sé el primero en comentar 💬
             </p>
           ) : (
-            <div className="flex flex-col gap-3">
+            <div className="space-y-3 bg-gradient-to-b from-transparent to-rgba(191,95,255,0.02) rounded-lg p-4">
               {comentarios.map((comentario) => (
                 <div
                   key={comentario.id}
-                  className="p-3 rounded-lg flex gap-3"
-                  style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.04)" }}
+                  className="flex gap-3 group"
                 >
                   {comentario.avatarUrl ? (
                     <img
                       src={comentario.avatarUrl}
                       alt={comentario.usuarioNombre}
-                      className="w-8 h-8 rounded-full flex-shrink-0 object-cover"
+                      className="w-9 h-9 rounded-full flex-shrink-0 object-cover"
                     />
                   ) : (
                     <div
-                      className="w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center text-xs font-bold"
+                      className="w-9 h-9 rounded-full flex-shrink-0 flex items-center justify-center text-xs font-bold"
                       style={{ background: "rgba(0,184,255,0.2)", color: "var(--neon-cyan)" }}
                     >
                       {comentario.usuarioNombre.charAt(0).toUpperCase()}
                     </div>
                   )}
-                  <div className="flex-1 min-w-0 flex items-start justify-between gap-2">
-                    <div className="flex-1 min-w-0">
-                      <p className="text-xs font-semibold" style={{ color: "var(--text-primary)" }}>
-                        {comentario.usuarioNombre}
-                      </p>
-                      <p className="text-xs mt-1 break-words" style={{ color: "var(--text-secondary)" }}>
-                        {comentario.texto}
-                      </p>
-                      <p className="text-xs mt-1" style={{ color: "var(--text-muted)" }}>
-                        {comentario.createdAt}
-                      </p>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 justify-between">
+                      <div>
+                        <p className="text-sm font-semibold" style={{ color: "var(--text-primary)" }}>
+                          {comentario.usuarioNombre}
+                        </p>
+                        <p className="text-xs" style={{ color: "var(--text-muted)" }}>
+                          {comentario.createdAt}
+                        </p>
+                      </div>
+                      {usuario && usuario.id === comentario.usuarioId && (
+                        <button
+                          onClick={() => handleDelete(comentario.id)}
+                          className="p-1 rounded opacity-0 group-hover:opacity-100 transition-opacity"
+                          style={{ color: "var(--neon-pink)" }}
+                          title="Eliminar"
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      )}
                     </div>
-                    {usuario && usuario.id === comentario.usuarioId && (
-                      <button
-                        onClick={() => handleDelete(comentario.id)}
-                        className="p-1 rounded transition-colors hover:bg-red-500/10"
-                        style={{ color: "var(--neon-pink)" }}
-                        title="Eliminar"
-                      >
-                        <Trash2 size={14} />
-                      </button>
-                    )}
+                    <p className="text-sm mt-1.5 break-words leading-relaxed" style={{ color: "var(--text-secondary)" }}>
+                      {comentario.texto}
+                    </p>
                   </div>
                 </div>
               ))}
