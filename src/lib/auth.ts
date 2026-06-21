@@ -57,9 +57,20 @@ export const getSesion = cache(async (): Promise<Usuario | null> => {
   if (!token) return null;
 
   const rows = await sql`
-    SELECT u.id, u.nombre, u.email, u.telefono, u.pais, u.avatar_url, u.username,
-           u.biografia, u.generos_favoritos, u.idiomas_preferidos, u.perfil_visible, u.notificaciones_habilitadas,
-           u.notif_comentarios_habilitada, u.notif_favoritos_habilitada, u.notif_seguidores_habilitada, u.notif_info_habilitada
+    SELECT u.id, u.nombre, u.email,
+           COALESCE(u.telefono, NULL) as "telefono",
+           COALESCE(u.pais, NULL) as "pais",
+           COALESCE(u.avatar_url, NULL) as "avatar_url",
+           COALESCE(u.username, NULL) as "username",
+           COALESCE(u.biografia, NULL) as "biografia",
+           COALESCE(u.generos_favoritos, NULL) as "generos_favoritos",
+           COALESCE(u.idiomas_preferidos, NULL) as "idiomas_preferidos",
+           COALESCE(u.perfil_visible, true) as "perfil_visible",
+           COALESCE(u.notificaciones_habilitadas, true) as "notificaciones_habilitadas",
+           COALESCE(u.notif_comentarios_habilitada, true) as "notif_comentarios_habilitada",
+           COALESCE(u.notif_favoritos_habilitada, true) as "notif_favoritos_habilitada",
+           COALESCE(u.notif_seguidores_habilitada, true) as "notif_seguidores_habilitada",
+           COALESCE(u.notif_info_habilitada, true) as "notif_info_habilitada"
     FROM sesion s
     JOIN usuario u ON u.id = s.usuario_id
     WHERE s.token = ${token} AND s.expires_at > now()
