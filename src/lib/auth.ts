@@ -20,6 +20,10 @@ export type Usuario = {
   idiomas_preferidos?: string[];
   perfil_visible?: boolean;
   notificaciones_habilitadas?: boolean;
+  notif_comentarios_habilitada?: boolean;
+  notif_favoritos_habilitada?: boolean;
+  notif_seguidores_habilitada?: boolean;
+  notif_info_habilitada?: boolean;
 };
 
 export async function crearSesion(usuarioId: number) {
@@ -54,7 +58,8 @@ export const getSesion = cache(async (): Promise<Usuario | null> => {
 
   const rows = await sql`
     SELECT u.id, u.nombre, u.email, u.telefono, u.pais, u.avatar_url, u.username,
-           u.biografia, u.generos_favoritos, u.idiomas_preferidos, u.perfil_visible, u.notificaciones_habilitadas
+           u.biografia, u.generos_favoritos, u.idiomas_preferidos, u.perfil_visible, u.notificaciones_habilitadas,
+           u.notif_comentarios_habilitada, u.notif_favoritos_habilitada, u.notif_seguidores_habilitada, u.notif_info_habilitada
     FROM sesion s
     JOIN usuario u ON u.id = s.usuario_id
     WHERE s.token = ${token} AND s.expires_at > now()
@@ -74,5 +79,9 @@ export const getSesion = cache(async (): Promise<Usuario | null> => {
     idiomas_preferidos: rows[0].idiomas_preferidos as string[] | undefined,
     perfil_visible: rows[0].perfil_visible as boolean | undefined,
     notificaciones_habilitadas: rows[0].notificaciones_habilitadas as boolean | undefined,
+    notif_comentarios_habilitada: rows[0].notif_comentarios_habilitada as boolean | undefined,
+    notif_favoritos_habilitada: rows[0].notif_favoritos_habilitada as boolean | undefined,
+    notif_seguidores_habilitada: rows[0].notif_seguidores_habilitada as boolean | undefined,
+    notif_info_habilitada: rows[0].notif_info_habilitada as boolean | undefined,
   };
 });
