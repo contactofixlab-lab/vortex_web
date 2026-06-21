@@ -3,7 +3,7 @@
 import { useState, useRef } from "react";
 import { useAuth } from "./AuthProvider";
 import { crearComentario, obtenerComentarios, eliminarComentario } from "@/app/actions";
-import { MessageSquare, Send, Trash2, Smile, ChevronDown } from "lucide-react";
+import { MessageSquare, Send, Trash2, Smile, ChevronDown, Image as ImageIcon, X } from "lucide-react";
 import EmojiPicker from "emoji-picker-react";
 
 interface Comentario {
@@ -27,7 +27,9 @@ export default function CommentSection({ contenidoId, comentariosIniciales }: Co
   const [cargando, setCargando] = useState(false);
   const [expanded, setExpanded] = useState(usuario !== null);
   const [showEmoji, setShowEmoji] = useState(false);
+  const [imagenPreview, setImagenPreview] = useState<string | null>(null);
   const emojiRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -62,6 +64,35 @@ export default function CommentSection({ contenidoId, comentariosIniciales }: Co
 
   const handleEmojiClick = (emojiObject: any) => {
     setTexto(texto + emojiObject.emoji);
+  };
+
+  const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      // Validar que sea imagen o GIF
+      if (!file.type.startsWith("image/")) {
+        alert("Por favor selecciona una imagen o GIF válido");
+        return;
+      }
+
+      // Leer archivo y crear preview
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const base64 = event.target?.result as string;
+        setImagenPreview(base64);
+        // Agregar referencia de imagen al texto
+        setTexto(texto + `[IMG: ${file.name}]`);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const removeImage = () => {
+    setImagenPreview(null);
+    setTexto(texto.replace(/\[IMG: [^\]]+\]/g, "").trim());
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
   };
 
   return (
@@ -123,38 +154,115 @@ export default function CommentSection({ contenidoId, comentariosIniciales }: Co
                       rows={2}
                     />
 
-                    {/* Actions Bar */}
-                    <div className="flex items-center justify-between">
-                      <div className="relative">
+                    {/* Image Preview */}
+                    {imagenPreview && (
+                      <div className="relative inline-block mb-2">
+                        <img
+                          src={imagenPreview}
+                          alt="preview"
+                          className="rounded-lg max-w-xs max-h-40 object-cover"
+                        />
                         <button
                           type="button"
-                          onClick={() => setShowEmoji(!showEmoji)}
+                          onClick={removeImage}
+                          className="absolute -top-2 -right-2 p-1 rounded-full transition-all hover:scale-110"
+                          style={{
+                            background: "rgba(255,45,120,0.8)",
+                            color: "white",
+                          }}
+                          title="Remover imagen"
+                        >
+                          <X size={16} />
+                        </button>
+                      </div>
+                    )}
+
+                    {/* Actions Bar */}
+                    <div className="flex items-center justify-between flex-wrap gap-2">
+                      <div className="flex items-center gap-1">
+                        {/* Image Upload */}
+                        <input
+                          ref={fileInputRef}
+                          type="file"
+                          accept="image/*,.gif"
+                          onChange={handleImageSelect}
+                          className="hidden"
+                          title="Agregar imagen o GIF"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => fileInputRef.current?.click()}
                           className="p-2 rounded-lg transition-all hover:bg-opacity-20"
                           style={{
-                            background: showEmoji ? "rgba(0,245,255,0.1)" : "transparent",
-                            color: showEmoji ? "var(--neon-cyan)" : "var(--text-muted)",
+                            background: imagenPreview ? "rgba(0,245,255,0.1)" : "transparent",
+                            color: imagenPreview ? "var(--neon-cyan)" : "var(--text-muted)",
                           }}
-                          title="Agregar emoji"
+                          title="Agregar imagen o GIF"
                         >
-                          <Smile size={18} />
+                          <ImageIcon size={18} />
                         </button>
 
-                        {showEmoji && (
-                          <div
-                            ref={emojiRef}
-                            className="absolute bottom-full mb-2 z-50"
+                        {/* Emoji Picker */}
+                        <div className="relative">
+                          <button
+                            type="button"
+                            onClick={() => setShowEmoji(!showEmoji)}
+                            className="p-2 rounded-lg transition-all hover:bg-opacity-20"
                             style={{
-                              filter: "drop-shadow(0 10px 30px rgba(0,0,0,0.3))",
+                              background: showEmoji ? "rgba(0,245,255,0.1)" : "transparent",
+                              color: showEmoji ? "var(--neon-cyan)" : "var(--text-muted)",
                             }}
+                            title="Agregar emoji"
                           >
-                            <EmojiPicker onEmojiClick={handleEmojiClick} />
-                          </div>
-                        )}
+                            <Smile size={18} />
+                          </button>
+
+                          {showEmoji && (
+                            <div
+                              ref={emojiRef}
+                              className="absolute bottom-full mb-2 z-50 left-0 md:left-auto md:right-0"
+                              style={{
+                                filter: "drop-shadow(0 10px 30px rgba(0,0,0,0.3))",
+                              }}
+                            >
+                              <style>{`
+                                .EmojiPickerReact {
+                                  --epr-bg-color: rgba(15, 10, 35, 0.95) !important;
+                                  --epr-text-color: #fff !important;
+                                  --epr-category-label-bg-color: rgba(191, 95, 255, 0.1) !important;
+                                  --epr-skin-tone-picker-border-color: rgba(0, 245, 255, 0.2) !important;
+                                  border-radius: 12px !important;
+                                  border: 1px solid rgba(0, 245, 255, 0.2) !important;
+                                }
+                                .EmojiPickerReact .epr-header {
+                                  background: linear-gradient(135deg, rgba(0,245,255,0.1), rgba(191,95,255,0.1)) !important;
+                                  border-bottom: 1px solid rgba(0, 245, 255, 0.2) !important;
+                                }
+                                .EmojiPickerReact .epr-category-nav {
+                                  background: rgba(191, 95, 255, 0.05) !important;
+                                  border-top: 1px solid rgba(0, 245, 255, 0.2) !important;
+                                }
+                                .EmojiPickerReact .epr-category-nav button.epr-category-nav__button {
+                                  color: rgba(255, 255, 255, 0.5) !important;
+                                }
+                                .EmojiPickerReact .epr-category-nav button.epr-category-nav__button.active {
+                                  color: var(--neon-cyan) !important;
+                                }
+                                .EmojiPickerReact input {
+                                  background: rgba(255, 255, 255, 0.05) !important;
+                                  border: 1px solid rgba(0, 245, 255, 0.2) !important;
+                                  color: #fff !important;
+                                }
+                              `}</style>
+                              <EmojiPicker onEmojiClick={handleEmojiClick} />
+                            </div>
+                          )}
+                        </div>
                       </div>
 
                       <div className="flex items-center gap-2">
                         <span className="text-xs font-medium" style={{ color: "var(--text-muted)" }}>
-                          {texto.length}/300
+                          {texto.replace(/\[IMG: [^\]]+\]/g, "").length}/300
                         </span>
                         <button
                           type="submit"
