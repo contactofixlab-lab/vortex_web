@@ -2,12 +2,7 @@
 
 import { createContext, useContext, useState } from "react";
 import { toggleFavorito as toggleFavoritoAction } from "@/app/actions";
-
-export type Usuario = {
-  id: number;
-  nombre: string;
-  email: string;
-};
+import type { Usuario } from "@/lib/auth";
 
 interface AuthContextValue {
   usuario: Usuario | null;
