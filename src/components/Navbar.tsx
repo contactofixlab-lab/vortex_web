@@ -47,10 +47,10 @@ export default function Navbar() {
   return (
     <header className="sticky top-3 z-50 w-full px-3 md:px-6">
       <div className="glass-nav max-w-7xl mx-auto rounded-2xl">
-        <div className="px-6 flex items-center justify-between gap-8" style={{ height: "10rem" }}>
+        <div className="px-6 flex items-center justify-between gap-8" style={{ height: "7rem" }}>
 
-          {/* Logo — aumentado 3x */}
-          <Link href="/" className="relative flex-shrink-0" style={{ width: 160, height: 160 }}>
+          {/* Logo — grande pero navbar más compacto */}
+          <Link href="/" className="relative flex-shrink-0 -my-4" style={{ width: 160, height: 160 }}>
             <Image src="/vortex logo.png" alt="Vortex" fill sizes="160px" style={{ objectFit: "contain" }} />
           </Link>
 
@@ -62,7 +62,7 @@ export default function Navbar() {
                 <Link
                   key={href}
                   href={href}
-                  className="px-4 py-1.5 rounded-full text-sm font-medium tracking-wide transition-all"
+                  className="px-5 py-2 rounded-full text-base font-medium tracking-wide transition-all"
                   style={{
                     color: active ? "var(--neon-yellow)" : "var(--text-secondary)",
                     background: active ? "rgba(255,212,71,0.1)" : "transparent",
@@ -81,13 +81,13 @@ export default function Navbar() {
             {/* Búsqueda inline */}
             <div className="hidden md:flex items-center gap-2">
               {search ? (
-                <div className="glass-card flex items-center gap-2 rounded-full px-3 py-1.5">
-                  <Search size={14} style={{ color: "var(--neon-cyan)" }} />
+                <div className="glass-card flex items-center gap-2 rounded-full px-4 py-2">
+                  <Search size={18} style={{ color: "var(--neon-cyan)" }} />
                   <input
                     autoFocus
                     type="text"
                     placeholder="Buscar..."
-                    className="bg-transparent outline-none text-sm w-40"
+                    className="bg-transparent outline-none text-base w-40"
                     style={{ color: "var(--text-primary)" }}
                     onBlur={() => setSearch(false)}
                   />
@@ -95,10 +95,10 @@ export default function Navbar() {
               ) : (
                 <button
                   onClick={() => setSearch(true)}
-                  className="glass-card p-2 rounded-full transition-all"
+                  className="glass-card p-2.5 rounded-full transition-all"
                   style={{ color: "var(--text-secondary)" }}
                 >
-                  <Search size={18} />
+                  <Search size={20} />
                 </button>
               )}
             </div>
@@ -110,7 +110,7 @@ export default function Navbar() {
               <div ref={menuRef} className="hidden md:block relative">
                 <button
                   onClick={() => setMenuOpen(o => !o)}
-                  className="flex items-center gap-2 px-2.5 py-1.5 rounded-full text-sm font-semibold tracking-wide transition-all"
+                  className="flex items-center gap-2 px-4 py-2 rounded-full text-base font-semibold tracking-wide transition-all"
                   style={{
                     color: "var(--neon-yellow)",
                     border: "1px solid rgba(255,212,71,0.4)",
@@ -121,10 +121,10 @@ export default function Navbar() {
                     <img
                       src={usuario.avatar_url}
                       alt={usuario.nombre}
-                      className="w-6 h-6 rounded-full object-cover"
+                      className="w-7 h-7 rounded-full object-cover"
                     />
                   ) : (
-                    <User size={14} />
+                    <User size={18} />
                   )}
                   {usuario.nombre.split(" ")[0]}
                   <ChevronDown size={13} style={{ transform: menuOpen ? "rotate(180deg)" : "none", transition: "transform 0.2s" }} />
