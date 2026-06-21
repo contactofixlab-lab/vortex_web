@@ -155,10 +155,10 @@ export async function crearComentario(contenidoId: number, texto: string): Promi
 
 export async function obtenerComentarios(
   contenidoId: number
-): Promise<{ id: number; usuarioNombre: string; texto: string; createdAt: string; usuarioId: number }[]> {
+): Promise<{ id: number; usuarioNombre: string; texto: string; createdAt: string; usuarioId: number; avatarUrl?: string }[]> {
   try {
     const rows = await sql`
-      SELECT c.id, u.nombre as "usuarioNombre", c.texto, c.created_at as "createdAt", u.id as "usuarioId"
+      SELECT c.id, u.nombre as "usuarioNombre", c.texto, c.created_at as "createdAt", u.id as "usuarioId", u.avatar_url as "avatarUrl"
       FROM comentario c
       JOIN usuario u ON u.id = c.usuario_id
       WHERE c.contenido_id = ${contenidoId}
@@ -171,6 +171,7 @@ export async function obtenerComentarios(
       texto: r.texto as string,
       createdAt: new Date(r.createdAt as string).toLocaleString("es-CL"),
       usuarioId: r.usuarioId as number,
+      avatarUrl: r.avatarUrl as string | undefined,
     }));
   } catch (err) {
     return [];

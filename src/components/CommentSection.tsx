@@ -11,6 +11,7 @@ interface Comentario {
   texto: string;
   createdAt: string;
   usuarioId: number;
+  avatarUrl?: string;
 }
 
 interface CommentSectionProps {
@@ -115,10 +116,24 @@ export default function CommentSection({ contenidoId, comentariosIniciales }: Co
               {comentarios.map((comentario) => (
                 <div
                   key={comentario.id}
-                  className="p-3 rounded-lg"
+                  className="p-3 rounded-lg flex gap-3"
                   style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.04)" }}
                 >
-                  <div className="flex items-start justify-between gap-2">
+                  {comentario.avatarUrl ? (
+                    <img
+                      src={comentario.avatarUrl}
+                      alt={comentario.usuarioNombre}
+                      className="w-8 h-8 rounded-full flex-shrink-0 object-cover"
+                    />
+                  ) : (
+                    <div
+                      className="w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center text-xs font-bold"
+                      style={{ background: "rgba(0,184,255,0.2)", color: "var(--neon-cyan)" }}
+                    >
+                      {comentario.usuarioNombre.charAt(0).toUpperCase()}
+                    </div>
+                  )}
+                  <div className="flex-1 min-w-0 flex items-start justify-between gap-2">
                     <div className="flex-1 min-w-0">
                       <p className="text-xs font-semibold" style={{ color: "var(--text-primary)" }}>
                         {comentario.usuarioNombre}

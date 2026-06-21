@@ -107,14 +107,22 @@ export default function Navbar() {
               <div ref={menuRef} className="hidden md:block relative">
                 <button
                   onClick={() => setMenuOpen(o => !o)}
-                  className="flex items-center gap-2 px-3.5 py-1.5 rounded-full text-sm font-semibold tracking-wide transition-all"
+                  className="flex items-center gap-2 px-2.5 py-1.5 rounded-full text-sm font-semibold tracking-wide transition-all"
                   style={{
                     color: "var(--neon-yellow)",
                     border: "1px solid rgba(255,212,71,0.4)",
                     boxShadow: "0 0 10px rgba(255,212,71,0.18)",
                   }}
                 >
-                  <User size={14} />
+                  {usuario.avatar_url ? (
+                    <img
+                      src={usuario.avatar_url}
+                      alt={usuario.nombre}
+                      className="w-6 h-6 rounded-full object-cover"
+                    />
+                  ) : (
+                    <User size={14} />
+                  )}
                   {usuario.nombre.split(" ")[0]}
                   <ChevronDown size={13} style={{ transform: menuOpen ? "rotate(180deg)" : "none", transition: "transform 0.2s" }} />
                 </button>
