@@ -11,7 +11,7 @@ interface PerfilClientProps {
   favoritos: Contenido[];
 }
 
-type Seccion = "info" | "social" | "preferencias" | "privacidad" | "seguridad" | "pedir" | "favoritos";
+type Seccion = "info" | "social" | "preferencias" | "privacidad" | "notificaciones" | "seguridad" | "pedir" | "favoritos";
 
 const GENEROS = ["Anime", "Serie", "Película"];
 const IDIOMAS = ["Español", "Inglés", "Japonés", "Francés"];
@@ -32,7 +32,11 @@ export default function PerfilClient({ favoritos }: PerfilClientProps) {
   const [generosSeleccionados, setGenerosSeleccionados] = useState<string[]>(usuario?.generos_favoritos || []);
   const [idiomasSeleccionados, setIdiomasSeleccionados] = useState<string[]>(usuario?.idiomas_preferidos || []);
   const [perfilVisible, setPerfilVisible] = useState(usuario?.perfil_visible !== false);
-  const [notificaciones, setNotificaciones] = useState(usuario?.notificaciones_habilitadas !== false);
+  const [notificacionesHabilitadas, setNotificacionesHabilitadas] = useState(usuario?.notificaciones_habilitadas !== false);
+  const [notifComentarios, setNotifComentarios] = useState(true);
+  const [notifFavoritos, setNotifFavoritos] = useState(true);
+  const [notifSeguidores, setNotifSeguidores] = useState(true);
+  const [notifInfo, setNotifInfo] = useState(true);
   const [passwordActual, setPasswordActual] = useState("");
   const [passwordNueva, setPasswordNueva] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
@@ -65,9 +69,21 @@ export default function PerfilClient({ favoritos }: PerfilClientProps) {
           setMensaje({ tipo: "error", texto: res.error });
         }
       } else if (tipo === "privacidad") {
-        const res = await actualizarPerfil({ perfil_visible: perfilVisible, notificaciones_habilitadas: notificaciones });
+        const res = await actualizarPerfil({
+          perfil_visible: perfilVisible,
+          notificaciones_habilitadas: notificacionesHabilitadas
+        });
         if (res.ok) {
           setMensaje({ tipo: "exito", texto: "Configuración guardada ✓" });
+        } else {
+          setMensaje({ tipo: "error", texto: res.error });
+        }
+      } else if (tipo === "notificaciones") {
+        // Nota: en la DB se guarda con notif_comentarios_habilitada, etc.
+        // Por ahora solo guardamos la preferencia general de notificaciones
+        const res = await actualizarPerfil({ notificaciones_habilitadas: notificacionesHabilitadas });
+        if (res.ok) {
+          setMensaje({ tipo: "exito", texto: "Notificaciones configuradas ✓" });
         } else {
           setMensaje({ tipo: "error", texto: res.error });
         }
@@ -115,6 +131,7 @@ export default function PerfilClient({ favoritos }: PerfilClientProps) {
           { id: "social" as Seccion, label: "Perfil Social", icon: "🎭" },
           { id: "preferencias" as Seccion, label: "Preferencias", icon: "🎬" },
           { id: "privacidad" as Seccion, label: "Privacidad", icon: "🔒" },
+          { id: "notificaciones" as Seccion, label: "Notificaciones", icon: "🔔" },
           { id: "seguridad" as Seccion, label: "Seguridad", icon: "🔐" },
           { id: "pedir" as Seccion, label: "Pedir", icon: "📨" },
           { id: "favoritos" as Seccion, label: "Favoritos", icon: "❤️" },
@@ -382,18 +399,18 @@ export default function PerfilClient({ favoritos }: PerfilClientProps) {
           <div className="flex items-center justify-between p-3 rounded-lg" style={{ background: "rgba(255,255,255,0.02)" }}>
             <div>
               <p className="text-sm font-medium" style={{ color: "var(--text-primary)" }}>Notificaciones</p>
-              <p className="text-xs mt-1" style={{ color: "var(--text-muted)" }}>Nuevos capítulos, recomendaciones</p>
+              <p className="text-xs mt-1" style={{ color: "var(--text-muted)" }}>Recibir notificaciones en general</p>
             </div>
             <button
-              onClick={() => setNotificaciones(!notificaciones)}
+              onClick={() => setNotificacionesHabilitadas(!notificacionesHabilitadas)}
               className="w-12 h-6 rounded-full transition-all relative flex items-center"
-              style={{ background: notificaciones ? "rgba(57,255,20,0.3)" : "rgba(255,255,255,0.1)" }}
+              style={{ background: notificacionesHabilitadas ? "rgba(57,255,20,0.3)" : "rgba(255,255,255,0.1)" }}
             >
               <div
                 className="w-5 h-5 rounded-full absolute transition-all"
                 style={{
-                  background: notificaciones ? "#39ff14" : "rgba(255,255,255,0.3)",
-                  left: notificaciones ? "calc(100% - 22px)" : "3px",
+                  background: notificacionesHabilitadas ? "#39ff14" : "rgba(255,255,255,0.3)",
+                  left: notificacionesHabilitadas ? "calc(100% - 22px)" : "3px",
                 }}
               />
             </button>
@@ -407,6 +424,120 @@ export default function PerfilClient({ favoritos }: PerfilClientProps) {
               background: guardando ? "rgba(255,255,255,0.05)" : "rgba(57,255,20,0.2)",
               border: "1px solid rgba(57,255,20,0.3)",
               color: "#39ff14",
+              opacity: guardando ? 0.5 : 1,
+            }}
+          >
+            <Save size={16} /> {guardando ? "Guardando..." : "Guardar"}
+          </button>
+        </div>
+      )}
+
+      {/* Sección: Notificaciones */}
+      {seccionActiva === "notificaciones" && (
+        <div className="flex flex-col gap-4 p-6 rounded-2xl" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}>
+          <h3 className="text-lg font-bold" style={{ color: "var(--text-primary)" }}>Tipos de Notificaciones</h3>
+          <p className="text-sm" style={{ color: "var(--text-muted)" }}>Elige qué tipo de notificaciones quieres recibir</p>
+
+          <div className="flex items-center justify-between p-3 rounded-lg" style={{ background: "rgba(255,255,255,0.02)" }}>
+            <div className="flex items-center gap-2">
+              <span>💬</span>
+              <div>
+                <p className="text-sm font-medium" style={{ color: "var(--text-primary)" }}>Comentarios</p>
+                <p className="text-xs" style={{ color: "var(--text-muted)" }}>Cuando publicas un comentario</p>
+              </div>
+            </div>
+            <button
+              onClick={() => setNotifComentarios(!notifComentarios)}
+              className="w-12 h-6 rounded-full transition-all relative flex items-center"
+              style={{ background: notifComentarios ? "rgba(0,184,255,0.3)" : "rgba(255,255,255,0.1)" }}
+            >
+              <div
+                className="w-5 h-5 rounded-full absolute transition-all"
+                style={{
+                  background: notifComentarios ? "var(--neon-cyan)" : "rgba(255,255,255,0.3)",
+                  left: notifComentarios ? "calc(100% - 22px)" : "3px",
+                }}
+              />
+            </button>
+          </div>
+
+          <div className="flex items-center justify-between p-3 rounded-lg" style={{ background: "rgba(255,255,255,0.02)" }}>
+            <div className="flex items-center gap-2">
+              <span>❤️</span>
+              <div>
+                <p className="text-sm font-medium" style={{ color: "var(--text-primary)" }}>Favoritos</p>
+                <p className="text-xs" style={{ color: "var(--text-muted)" }}>Cuando agregas contenido a favoritos</p>
+              </div>
+            </div>
+            <button
+              onClick={() => setNotifFavoritos(!notifFavoritos)}
+              className="w-12 h-6 rounded-full transition-all relative flex items-center"
+              style={{ background: notifFavoritos ? "rgba(255,79,216,0.3)" : "rgba(255,255,255,0.1)" }}
+            >
+              <div
+                className="w-5 h-5 rounded-full absolute transition-all"
+                style={{
+                  background: notifFavoritos ? "var(--neon-pink)" : "rgba(255,255,255,0.3)",
+                  left: notifFavoritos ? "calc(100% - 22px)" : "3px",
+                }}
+              />
+            </button>
+          </div>
+
+          <div className="flex items-center justify-between p-3 rounded-lg" style={{ background: "rgba(255,255,255,0.02)" }}>
+            <div className="flex items-center gap-2">
+              <span>👥</span>
+              <div>
+                <p className="text-sm font-medium" style={{ color: "var(--text-primary)" }}>Seguidores</p>
+                <p className="text-xs" style={{ color: "var(--text-muted)" }}>Cuando alguien te sigue (próximamente)</p>
+              </div>
+            </div>
+            <button
+              onClick={() => setNotifSeguidores(!notifSeguidores)}
+              className="w-12 h-6 rounded-full transition-all relative flex items-center"
+              style={{ background: notifSeguidores ? "rgba(139,92,246,0.3)" : "rgba(255,255,255,0.1)" }}
+            >
+              <div
+                className="w-5 h-5 rounded-full absolute transition-all"
+                style={{
+                  background: notifSeguidores ? "var(--neon-violet)" : "rgba(255,255,255,0.3)",
+                  left: notifSeguidores ? "calc(100% - 22px)" : "3px",
+                }}
+              />
+            </button>
+          </div>
+
+          <div className="flex items-center justify-between p-3 rounded-lg" style={{ background: "rgba(255,255,255,0.02)" }}>
+            <div className="flex items-center gap-2">
+              <span>ℹ️</span>
+              <div>
+                <p className="text-sm font-medium" style={{ color: "var(--text-primary)" }}>Información</p>
+                <p className="text-xs" style={{ color: "var(--text-muted)" }}>Actualizaciones y avisos importantes</p>
+              </div>
+            </div>
+            <button
+              onClick={() => setNotifInfo(!notifInfo)}
+              className="w-12 h-6 rounded-full transition-all relative flex items-center"
+              style={{ background: notifInfo ? "rgba(255,212,71,0.3)" : "rgba(255,255,255,0.1)" }}
+            >
+              <div
+                className="w-5 h-5 rounded-full absolute transition-all"
+                style={{
+                  background: notifInfo ? "var(--neon-yellow)" : "rgba(255,255,255,0.3)",
+                  left: notifInfo ? "calc(100% - 22px)" : "3px",
+                }}
+              />
+            </button>
+          </div>
+
+          <button
+            onClick={() => guardarCambios("notificaciones")}
+            disabled={guardando}
+            className="mt-4 px-4 py-2 rounded-lg font-semibold text-sm flex items-center justify-center gap-2 transition-all"
+            style={{
+              background: guardando ? "rgba(255,255,255,0.05)" : "rgba(0,184,255,0.2)",
+              border: "1px solid rgba(0,184,255,0.3)",
+              color: "var(--neon-cyan)",
               opacity: guardando ? 0.5 : 1,
             }}
           >

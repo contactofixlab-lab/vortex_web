@@ -134,6 +134,46 @@ export async function cambiarPassword(passwordActual: string, passwordNueva: str
   return { ok: true };
 }
 
+async function crearNotificacionAuto(
+  usuarioIdDestino: number,
+  titulo: string,
+  mensaje: string,
+  tipo: string,
+  enlace?: string
+): Promise<void> {
+  try {
+    // Verificar si el usuario tiene habilitadas notificaciones de este tipo
+    const usuario = await sql`
+      SELECT
+        notif_comentarios_habilitada,
+        notif_favoritos_habilitada,
+        notif_seguidores_habilitada,
+        notif_info_habilitada
+      FROM usuario WHERE id = ${usuarioIdDestino}
+    `;
+
+    if (usuario.length === 0) return;
+
+    const u = usuario[0];
+    let habilitada = true;
+
+    if (tipo === "comentario") habilitada = u.notif_comentarios_habilitada as boolean;
+    else if (tipo === "favorito") habilitada = u.notif_favoritos_habilitada as boolean;
+    else if (tipo === "seguidor") habilitada = u.notif_seguidores_habilitada as boolean;
+    else if (tipo === "info") habilitada = u.notif_info_habilitada as boolean;
+
+    if (!habilitada) return;
+
+    // Crear notificación
+    await sql`
+      INSERT INTO notificacion (usuario_id, titulo, mensaje, tipo, enlace)
+      VALUES (${usuarioIdDestino}, ${titulo}, ${mensaje}, ${tipo}, ${enlace || null})
+    `;
+  } catch (err) {
+    console.error("Error al crear notificación:", err);
+  }
+}
+
 export async function crearComentario(contenidoId: number, texto: string): Promise<ActionResult> {
   const usuario = await getSesion();
   if (!usuario) return { ok: false, error: "Debes iniciar sesión." };
@@ -143,10 +183,26 @@ export async function crearComentario(contenidoId: number, texto: string): Promi
   if (textoLimpio.length > 300) return { ok: false, error: "El comentario es muy largo." };
 
   try {
+    // Obtener el contenido para saber quién lo subió
+    const contenido = await sql`SELECT id FROM contenido WHERE id = ${contenidoId}`;
+    if (contenido.length === 0) return { ok: false, error: "Contenido no encontrado." };
+
+    // Crear comentario
     await sql`
       INSERT INTO comentario (contenido_id, usuario_id, texto)
       VALUES (${contenidoId}, ${usuario.id}, ${textoLimpio})
     `;
+
+    // NOTIFICACIÓN: avisar a otros usuarios que comentaron este contenido (próximamente, ahora solo info)
+    // Por ahora creamos una notificación genérica
+    await crearNotificacionAuto(
+      usuario.id,
+      "Comentario publicado",
+      `Tu comentario en "${contenido[0].titulo || 'este contenido'}" fue publicado.`,
+      "info",
+      `/anime/[slug]` // enlace dinámico próximamente
+    );
+
     return { ok: true };
   } catch (err) {
     return { ok: false, error: "Error al crear comentario." };
@@ -260,6 +316,18 @@ export async function toggleFavorito(contenidoId: number): Promise<{ ok: true; f
     await sql`DELETE FROM favorito WHERE usuario_id = ${usuario.id} AND contenido_id = ${contenidoId}`;
     return { ok: true, favorito: false };
   }
+
+  // Agregar a favoritos
   await sql`INSERT INTO favorito (usuario_id, contenido_id) VALUES (${usuario.id}, ${contenidoId})`;
+
+  // NOTIFICACIÓN: avisar al usuario que agregó algo a favoritos
+  await crearNotificacionAuto(
+    usuario.id,
+    "Agregado a favoritos ♥",
+    "Has agregado este contenido a tu lista de favoritos.",
+    "favorito",
+    "/perfil"
+  );
+
   return { ok: true, favorito: true };
 }
