@@ -9,6 +9,12 @@ import { Contenido } from "@/lib/contenido";
 
 interface PerfilClientProps {
   favoritos: Contenido[];
+  notificaciones?: {
+    comentarios: boolean;
+    favoritos: boolean;
+    seguidores: boolean;
+    info: boolean;
+  };
 }
 
 type Seccion = "info" | "social" | "preferencias" | "privacidad" | "notificaciones" | "seguridad" | "pedir" | "favoritos";
@@ -16,7 +22,7 @@ type Seccion = "info" | "social" | "preferencias" | "privacidad" | "notificacion
 const GENEROS = ["Anime", "Serie", "Película"];
 const IDIOMAS = ["Español", "Inglés", "Japonés", "Francés"];
 
-export default function PerfilClient({ favoritos }: PerfilClientProps) {
+export default function PerfilClient({ favoritos, notificaciones }: PerfilClientProps) {
   const { usuario } = useAuth();
   const [seccionActiva, setSeccionActiva] = useState<Seccion>("info");
   const [guardando, setGuardando] = useState(false);
@@ -33,10 +39,10 @@ export default function PerfilClient({ favoritos }: PerfilClientProps) {
   const [idiomasSeleccionados, setIdiomasSeleccionados] = useState<string[]>(usuario?.idiomas_preferidos || []);
   const [perfilVisible, setPerfilVisible] = useState(usuario?.perfil_visible !== false);
   const [notificacionesHabilitadas, setNotificacionesHabilitadas] = useState(usuario?.notificaciones_habilitadas !== false);
-  const [notifComentarios, setNotifComentarios] = useState(true);
-  const [notifFavoritos, setNotifFavoritos] = useState(true);
-  const [notifSeguidores, setNotifSeguidores] = useState(true);
-  const [notifInfo, setNotifInfo] = useState(true);
+  const [notifComentarios, setNotifComentarios] = useState(notificaciones?.comentarios ?? true);
+  const [notifFavoritos, setNotifFavoritos] = useState(notificaciones?.favoritos ?? true);
+  const [notifSeguidores, setNotifSeguidores] = useState(notificaciones?.seguidores ?? true);
+  const [notifInfo, setNotifInfo] = useState(notificaciones?.info ?? true);
   const [passwordActual, setPasswordActual] = useState("");
   const [passwordNueva, setPasswordNueva] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
@@ -79,9 +85,13 @@ export default function PerfilClient({ favoritos }: PerfilClientProps) {
           setMensaje({ tipo: "error", texto: res.error });
         }
       } else if (tipo === "notificaciones") {
-        // Nota: en la DB se guarda con notif_comentarios_habilitada, etc.
-        // Por ahora solo guardamos la preferencia general de notificaciones
-        const res = await actualizarPerfil({ notificaciones_habilitadas: notificacionesHabilitadas });
+        const res = await actualizarPerfil({
+          notificaciones_habilitadas: notificacionesHabilitadas,
+          notif_comentarios_habilitada: notifComentarios,
+          notif_favoritos_habilitada: notifFavoritos,
+          notif_seguidores_habilitada: notifSeguidores,
+          notif_info_habilitada: notifInfo,
+        });
         if (res.ok) {
           setMensaje({ tipo: "exito", texto: "Notificaciones configuradas ✓" });
         } else {

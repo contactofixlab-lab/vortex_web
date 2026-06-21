@@ -64,6 +64,10 @@ export async function actualizarPerfil(datos: {
   idiomas_preferidos?: string[];
   perfil_visible?: boolean;
   notificaciones_habilitadas?: boolean;
+  notif_comentarios_habilitada?: boolean;
+  notif_favoritos_habilitada?: boolean;
+  notif_seguidores_habilitada?: boolean;
+  notif_info_habilitada?: boolean;
 }): Promise<ActionResult> {
   const usuario = await getSesion();
   if (!usuario) return { ok: false, error: "Debes iniciar sesión." };
@@ -110,6 +114,22 @@ export async function actualizarPerfil(datos: {
   if (datos.notificaciones_habilitadas !== undefined) {
     updates.push(`notificaciones_habilitadas = $${updates.length + 1}`);
     values.push(datos.notificaciones_habilitadas);
+  }
+  if (datos.notif_comentarios_habilitada !== undefined) {
+    updates.push(`notif_comentarios_habilitada = $${updates.length + 1}`);
+    values.push(datos.notif_comentarios_habilitada);
+  }
+  if (datos.notif_favoritos_habilitada !== undefined) {
+    updates.push(`notif_favoritos_habilitada = $${updates.length + 1}`);
+    values.push(datos.notif_favoritos_habilitada);
+  }
+  if (datos.notif_seguidores_habilitada !== undefined) {
+    updates.push(`notif_seguidores_habilitada = $${updates.length + 1}`);
+    values.push(datos.notif_seguidores_habilitada);
+  }
+  if (datos.notif_info_habilitada !== undefined) {
+    updates.push(`notif_info_habilitada = $${updates.length + 1}`);
+    values.push(datos.notif_info_habilitada);
   }
 
   if (updates.length === 0) return { ok: true };
