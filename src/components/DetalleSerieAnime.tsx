@@ -7,6 +7,7 @@ import { ChevronDown, ChevronLeft, PlayCircle, ListVideo, Heart } from "lucide-r
 import type { Contenido } from "@/lib/contenido";
 import type { Temporada } from "@/lib/detalle";
 import { useAuth } from "./AuthProvider";
+import CommentSection from "./CommentSection";
 
 const TIPO_COLOR: Record<string, string> = {
   anime: "var(--neon-violet)",
@@ -41,7 +42,23 @@ const SERVIDORES = [
   { key: "mega", label: "Mega", color: "var(--server-mega)" },
 ] as const;
 
-export default function DetalleSerieAnime({ item, temporadas }: { item: Contenido; temporadas: Temporada[] }) {
+interface Comentario {
+  id: number;
+  usuarioNombre: string;
+  texto: string;
+  createdAt: string;
+  usuarioId: number;
+}
+
+export default function DetalleSerieAnime({
+  item,
+  temporadas,
+  comentarios = [],
+}: {
+  item: Contenido;
+  temporadas: Temporada[];
+  comentarios?: Comentario[];
+}) {
   const [tab, setTab] = useState<TabKey>("descripcion");
   const [temporadaAbierta, setTemporadaAbierta] = useState(1);
   const { usuario, isFavorito, toggleFavorito } = useAuth();
@@ -249,6 +266,9 @@ export default function DetalleSerieAnime({ item, temporadas }: { item: Contenid
           );
         })}
       </div>
+
+      {/* Sección de comentarios */}
+      <CommentSection contenidoId={Number(item.id)} comentariosIniciales={comentarios} />
     </div>
   );
 }
