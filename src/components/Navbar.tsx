@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import { Search, User, Menu, X, Heart, LogOut, ChevronDown } from "lucide-react";
+import { Search, User, Menu, X, Heart, LogOut, ChevronDown, Bell, Settings } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useAuth } from "./AuthProvider";
 import { cerrarSesion } from "@/app/actions";
@@ -132,17 +132,54 @@ export default function Navbar() {
 
                 {menuOpen && (
                   <div
-                    className="glass-card absolute right-0 mt-2 w-48 rounded-2xl overflow-hidden py-1.5 z-50"
+                    className="glass-card absolute right-0 mt-2 w-56 rounded-2xl overflow-hidden py-1.5 z-50"
                   >
+                    <Link
+                      href="/notificaciones"
+                      onClick={() => setMenuOpen(false)}
+                      className="flex items-center gap-2.5 px-4 py-2.5 text-sm transition-colors"
+                      style={{ color: "var(--text-secondary)" }}
+                    >
+                      <Bell size={14} style={{ color: "var(--neon-yellow)" }} />
+                      Notificaciones
+                    </Link>
+
+                    <div
+                      style={{
+                        height: "1px",
+                        background: "rgba(255,255,255,0.1)",
+                        margin: "0.5rem 0",
+                      }}
+                    />
+
+                    <Link
+                      href="/perfil?seccion=favoritos"
+                      onClick={() => setMenuOpen(false)}
+                      className="flex items-center gap-2.5 px-4 py-2.5 text-sm transition-colors"
+                      style={{ color: "var(--text-secondary)" }}
+                    >
+                      <Heart size={14} style={{ color: "var(--neon-pink)" }} />
+                      Mis Favoritos
+                    </Link>
+
                     <Link
                       href="/perfil"
                       onClick={() => setMenuOpen(false)}
                       className="flex items-center gap-2.5 px-4 py-2.5 text-sm transition-colors"
                       style={{ color: "var(--text-secondary)" }}
                     >
-                      <Heart size={14} />
-                      Mis favoritos
+                      <Settings size={14} style={{ color: "var(--neon-cyan)" }} />
+                      Mi Perfil
                     </Link>
+
+                    <div
+                      style={{
+                        height: "1px",
+                        background: "rgba(255,255,255,0.1)",
+                        margin: "0.5rem 0",
+                      }}
+                    />
+
                     <button
                       onClick={handleLogout}
                       className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm transition-colors text-left"
