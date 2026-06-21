@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useAuth } from "./AuthProvider";
-import { crearComentario, obtenerComentarios } from "@/app/actions";
+import { crearComentario, obtenerComentarios, eliminarComentario } from "@/app/actions";
 import { MessageSquare, Send, Trash2 } from "lucide-react";
 
 interface Comentario {
@@ -42,6 +42,18 @@ export default function CommentSection({ contenidoId, comentariosIniciales }: Co
       console.error(err);
     }
     setCargando(false);
+  }
+
+  async function handleDelete(comentarioId: number) {
+    try {
+      const res = await eliminarComentario(comentarioId);
+      if (res.ok) {
+        const nuevos = await obtenerComentarios(contenidoId);
+        setComentarios(nuevos);
+      }
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   return (
@@ -120,6 +132,7 @@ export default function CommentSection({ contenidoId, comentariosIniciales }: Co
                     </div>
                     {usuario && usuario.id === comentario.usuarioId && (
                       <button
+                        onClick={() => handleDelete(comentario.id)}
                         className="p-1 rounded transition-colors hover:bg-red-500/10"
                         style={{ color: "var(--neon-pink)" }}
                         title="Eliminar"

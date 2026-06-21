@@ -28,6 +28,7 @@ export default function PerfilClient({ favoritos }: PerfilClientProps) {
   const [pais, setPais] = useState(usuario?.pais || "");
   const [username, setUsername] = useState(usuario?.username || "");
   const [biografia, setBiografia] = useState(usuario?.biografia || "");
+  const [avatarUrl, setAvatarUrl] = useState(usuario?.avatar_url || "");
   const [generosSeleccionados, setGenerosSeleccionados] = useState<string[]>(usuario?.generos_favoritos || []);
   const [idiomasSeleccionados, setIdiomasSeleccionados] = useState<string[]>(usuario?.idiomas_preferidos || []);
   const [perfilVisible, setPerfilVisible] = useState(usuario?.perfil_visible !== false);
@@ -50,7 +51,7 @@ export default function PerfilClient({ favoritos }: PerfilClientProps) {
           setMensaje({ tipo: "error", texto: res.error });
         }
       } else if (tipo === "social") {
-        const res = await actualizarPerfil({ username, biografia });
+        const res = await actualizarPerfil({ username, biografia, avatar_url: avatarUrl });
         if (res.ok) {
           setMensaje({ tipo: "exito", texto: "Perfil actualizado ✓" });
         } else {
@@ -248,7 +249,25 @@ export default function PerfilClient({ favoritos }: PerfilClientProps) {
             <p className="text-xs mt-1" style={{ color: "var(--text-muted)" }}>{biografia.length}/200</p>
           </div>
 
-          <p className="text-xs" style={{ color: "var(--text-muted)" }}>🎭 Avatar: Próximamente disponible</p>
+          <div className="flex gap-3 items-end">
+            <div className="flex-1">
+              <label className="text-xs font-semibold" style={{ color: "var(--text-muted)" }}>Avatar (URL)</label>
+              <input
+                type="url"
+                value={avatarUrl}
+                onChange={(e) => setAvatarUrl(e.target.value)}
+                placeholder="https://example.com/avatar.jpg"
+                className="w-full mt-1 px-3 py-2 rounded-lg bg-transparent border text-sm"
+                style={{ borderColor: "rgba(255,255,255,0.1)", color: "var(--text-primary)" }}
+              />
+              <p className="text-xs mt-1" style={{ color: "var(--text-muted)" }}>PNG, JPG o GIF (máx 5MB)</p>
+            </div>
+            {avatarUrl && (
+              <div className="w-12 h-12 rounded-full overflow-hidden border" style={{ borderColor: "rgba(255,255,255,0.2)" }}>
+                <img src={avatarUrl} alt="Avatar preview" className="w-full h-full object-cover" />
+              </div>
+            )}
+          </div>
 
           <button
             onClick={() => guardarCambios("social")}

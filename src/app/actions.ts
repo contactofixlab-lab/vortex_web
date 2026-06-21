@@ -59,6 +59,7 @@ export async function actualizarPerfil(datos: {
   pais?: string;
   username?: string;
   biografia?: string;
+  avatar_url?: string;
   generos_favoritos?: string[];
   idiomas_preferidos?: string[];
   perfil_visible?: boolean;
@@ -89,6 +90,10 @@ export async function actualizarPerfil(datos: {
   if (datos.biografia !== undefined) {
     updates.push(`biografia = $${updates.length + 1}`);
     values.push(datos.biografia.trim() || null);
+  }
+  if (datos.avatar_url !== undefined) {
+    updates.push(`avatar_url = $${updates.length + 1}`);
+    values.push(datos.avatar_url.trim() || null);
   }
   if (datos.generos_favoritos !== undefined) {
     updates.push(`generos_favoritos = $${updates.length + 1}`);
@@ -169,6 +174,22 @@ export async function obtenerComentarios(
     }));
   } catch (err) {
     return [];
+  }
+}
+
+export async function eliminarComentario(comentarioId: number): Promise<ActionResult> {
+  const usuario = await getSesion();
+  if (!usuario) return { ok: false, error: "Debes iniciar sesión." };
+
+  try {
+    const comentario = await sql`SELECT usuario_id FROM comentario WHERE id = ${comentarioId}`;
+    if (comentario.length === 0) return { ok: false, error: "Comentario no encontrado." };
+    if (comentario[0].usuario_id !== usuario.id) return { ok: false, error: "No puedes eliminar comentarios ajenos." };
+
+    await sql`DELETE FROM comentario WHERE id = ${comentarioId}`;
+    return { ok: true };
+  } catch (err) {
+    return { ok: false, error: "Error al eliminar comentario." };
   }
 }
 
