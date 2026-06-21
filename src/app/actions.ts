@@ -194,6 +194,63 @@ export async function eliminarComentario(comentarioId: number): Promise<ActionRe
   }
 }
 
+export async function obtenerNotificaciones(): Promise<{ id: number; titulo: string; mensaje: string; tipo: string; leida: boolean; createdAt: string; enlace?: string }[]> {
+  const usuario = await getSesion();
+  if (!usuario) return [];
+
+  try {
+    const rows = await sql`
+      SELECT id, titulo, mensaje, tipo, leida, created_at as "createdAt", enlace
+      FROM notificacion
+      WHERE usuario_id = ${usuario.id}
+      ORDER BY created_at DESC
+      LIMIT 20
+    `;
+    return rows.map((r) => ({
+      id: r.id as number,
+      titulo: r.titulo as string,
+      mensaje: r.mensaje as string,
+      tipo: r.tipo as string,
+      leida: r.leida as boolean,
+      createdAt: new Date(r.createdAt as string).toLocaleString("es-CL"),
+      enlace: r.enlace as string | undefined,
+    }));
+  } catch (err) {
+    return [];
+  }
+}
+
+export async function marcarNotificacionLeida(notificacionId: number): Promise<ActionResult> {
+  const usuario = await getSesion();
+  if (!usuario) return { ok: false, error: "Debes iniciar sesión." };
+
+  try {
+    await sql`
+      UPDATE notificacion
+      SET leida = true
+      WHERE id = ${notificacionId} AND usuario_id = ${usuario.id}
+    `;
+    return { ok: true };
+  } catch (err) {
+    return { ok: false, error: "Error al marcar notificación." };
+  }
+}
+
+export async function obtenerCountNotificacionesNoLeidas(): Promise<number> {
+  const usuario = await getSesion();
+  if (!usuario) return 0;
+
+  try {
+    const rows = await sql`
+      SELECT COUNT(*) as count FROM notificacion
+      WHERE usuario_id = ${usuario.id} AND leida = false
+    `;
+    return (rows[0].count as number) || 0;
+  } catch (err) {
+    return 0;
+  }
+}
+
 export async function toggleFavorito(contenidoId: number): Promise<{ ok: true; favorito: boolean } | { ok: false; error: string }> {
   const usuario = await getSesion();
   if (!usuario) return { ok: false, error: "Debes iniciar sesión." };

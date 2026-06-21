@@ -7,6 +7,7 @@ import { Search, User, Menu, X, Heart, LogOut, ChevronDown } from "lucide-react"
 import { useEffect, useRef, useState } from "react";
 import { useAuth } from "./AuthProvider";
 import { cerrarSesion } from "@/app/actions";
+import NotificationBell from "./NotificationBell";
 
 const LINKS = [
   { href: "/",          label: "Inicio"    },
@@ -102,7 +103,9 @@ export default function Navbar() {
               )}
             </div>
 
-            {/* Sesión */}
+            {/* Notificaciones y Sesión */}
+            {usuario && <NotificationBell />}
+
             {usuario ? (
               <div ref={menuRef} className="hidden md:block relative">
                 <button
