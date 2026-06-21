@@ -129,6 +129,49 @@ export async function cambiarPassword(passwordActual: string, passwordNueva: str
   return { ok: true };
 }
 
+export async function crearComentario(contenidoId: number, texto: string): Promise<ActionResult> {
+  const usuario = await getSesion();
+  if (!usuario) return { ok: false, error: "Debes iniciar sesión." };
+
+  const textoLimpio = texto.trim();
+  if (textoLimpio.length < 2) return { ok: false, error: "El comentario es muy corto." };
+  if (textoLimpio.length > 300) return { ok: false, error: "El comentario es muy largo." };
+
+  try {
+    await sql`
+      INSERT INTO comentario (contenido_id, usuario_id, texto)
+      VALUES (${contenidoId}, ${usuario.id}, ${textoLimpio})
+    `;
+    return { ok: true };
+  } catch (err) {
+    return { ok: false, error: "Error al crear comentario." };
+  }
+}
+
+export async function obtenerComentarios(
+  contenidoId: number
+): Promise<{ id: number; usuarioNombre: string; texto: string; createdAt: string; usuarioId: number }[]> {
+  try {
+    const rows = await sql`
+      SELECT c.id, u.nombre as "usuarioNombre", c.texto, c.created_at as "createdAt", u.id as "usuarioId"
+      FROM comentario c
+      JOIN usuario u ON u.id = c.usuario_id
+      WHERE c.contenido_id = ${contenidoId}
+      ORDER BY c.created_at DESC
+      LIMIT 50
+    `;
+    return rows.map((r) => ({
+      id: r.id as number,
+      usuarioNombre: r.usuarioNombre as string,
+      texto: r.texto as string,
+      createdAt: new Date(r.createdAt as string).toLocaleString("es-CL"),
+      usuarioId: r.usuarioId as number,
+    }));
+  } catch (err) {
+    return [];
+  }
+}
+
 export async function toggleFavorito(contenidoId: number): Promise<{ ok: true; favorito: boolean } | { ok: false; error: string }> {
   const usuario = await getSesion();
   if (!usuario) return { ok: false, error: "Debes iniciar sesión." };
