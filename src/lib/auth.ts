@@ -11,6 +11,7 @@ export type Usuario = {
   id: number;
   nombre: string;
   email: string;
+  // Campos opcionales - existirán después de ejecutar ALTER TABLE en Neon
   telefono?: string;
   pais?: string;
   avatar_url?: string;
@@ -57,20 +58,7 @@ export const getSesion = cache(async (): Promise<Usuario | null> => {
   if (!token) return null;
 
   const rows = await sql`
-    SELECT u.id, u.nombre, u.email,
-           COALESCE(u.telefono, NULL) as "telefono",
-           COALESCE(u.pais, NULL) as "pais",
-           COALESCE(u.avatar_url, NULL) as "avatar_url",
-           COALESCE(u.username, NULL) as "username",
-           COALESCE(u.biografia, NULL) as "biografia",
-           COALESCE(u.generos_favoritos, NULL) as "generos_favoritos",
-           COALESCE(u.idiomas_preferidos, NULL) as "idiomas_preferidos",
-           COALESCE(u.perfil_visible, true) as "perfil_visible",
-           COALESCE(u.notificaciones_habilitadas, true) as "notificaciones_habilitadas",
-           COALESCE(u.notif_comentarios_habilitada, true) as "notif_comentarios_habilitada",
-           COALESCE(u.notif_favoritos_habilitada, true) as "notif_favoritos_habilitada",
-           COALESCE(u.notif_seguidores_habilitada, true) as "notif_seguidores_habilitada",
-           COALESCE(u.notif_info_habilitada, true) as "notif_info_habilitada"
+    SELECT u.id, u.nombre, u.email
     FROM sesion s
     JOIN usuario u ON u.id = s.usuario_id
     WHERE s.token = ${token} AND s.expires_at > now()
@@ -81,18 +69,6 @@ export const getSesion = cache(async (): Promise<Usuario | null> => {
     id: rows[0].id as number,
     nombre: rows[0].nombre as string,
     email: rows[0].email as string,
-    telefono: rows[0].telefono as string | undefined,
-    pais: rows[0].pais as string | undefined,
-    avatar_url: rows[0].avatar_url as string | undefined,
-    username: rows[0].username as string | undefined,
-    biografia: rows[0].biografia as string | undefined,
-    generos_favoritos: rows[0].generos_favoritos as string[] | undefined,
-    idiomas_preferidos: rows[0].idiomas_preferidos as string[] | undefined,
-    perfil_visible: rows[0].perfil_visible as boolean | undefined,
-    notificaciones_habilitadas: rows[0].notificaciones_habilitadas as boolean | undefined,
-    notif_comentarios_habilitada: rows[0].notif_comentarios_habilitada as boolean | undefined,
-    notif_favoritos_habilitada: rows[0].notif_favoritos_habilitada as boolean | undefined,
-    notif_seguidores_habilitada: rows[0].notif_seguidores_habilitada as boolean | undefined,
-    notif_info_habilitada: rows[0].notif_info_habilitada as boolean | undefined,
+    // Campos opcionales serán undefined hasta ejecutar ALTER TABLE en Neon
   };
 });

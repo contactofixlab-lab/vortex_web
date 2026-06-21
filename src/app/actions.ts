@@ -17,8 +17,6 @@ export async function registrarUsuario(
 ): Promise<ActionResult> {
   const nombreLimpio = nombre.trim();
   const emailLimpio = email.trim().toLowerCase();
-  const telefonoLimpio = telefono?.trim() || null;
-  const paisLimpio = pais?.trim() || null;
 
   if (nombreLimpio.length < 2) return { ok: false, error: "Ingresa tu nombre." };
   if (!EMAIL_RE.test(emailLimpio)) return { ok: false, error: "Ingresa un correo válido." };
@@ -29,8 +27,8 @@ export async function registrarUsuario(
 
   const hash = await bcrypt.hash(password, 10);
   const rows = await sql`
-    INSERT INTO usuario (email, password_hash, nombre, telefono, pais)
-    VALUES (${emailLimpio}, ${hash}, ${nombreLimpio}, ${telefonoLimpio}, ${paisLimpio})
+    INSERT INTO usuario (email, password_hash, nombre)
+    VALUES (${emailLimpio}, ${hash}, ${nombreLimpio})
     RETURNING id
   `;
   await crearSesion(rows[0].id as number);
@@ -79,58 +77,8 @@ export async function actualizarPerfil(datos: {
     updates.push(`nombre = $${updates.length + 1}`);
     values.push(datos.nombre.trim());
   }
-  if (datos.telefono !== undefined) {
-    updates.push(`telefono = $${updates.length + 1}`);
-    values.push(datos.telefono.trim() || null);
-  }
-  if (datos.pais !== undefined) {
-    updates.push(`pais = $${updates.length + 1}`);
-    values.push(datos.pais.trim() || null);
-  }
-  if (datos.username !== undefined) {
-    updates.push(`username = $${updates.length + 1}`);
-    values.push(datos.username.trim() || null);
-  }
-  if (datos.biografia !== undefined) {
-    updates.push(`biografia = $${updates.length + 1}`);
-    values.push(datos.biografia.trim() || null);
-  }
-  if (datos.avatar_url !== undefined) {
-    updates.push(`avatar_url = $${updates.length + 1}`);
-    values.push(datos.avatar_url.trim() || null);
-  }
-  if (datos.generos_favoritos !== undefined) {
-    updates.push(`generos_favoritos = $${updates.length + 1}`);
-    values.push(datos.generos_favoritos);
-  }
-  if (datos.idiomas_preferidos !== undefined) {
-    updates.push(`idiomas_preferidos = $${updates.length + 1}`);
-    values.push(datos.idiomas_preferidos);
-  }
-  if (datos.perfil_visible !== undefined) {
-    updates.push(`perfil_visible = $${updates.length + 1}`);
-    values.push(datos.perfil_visible);
-  }
-  if (datos.notificaciones_habilitadas !== undefined) {
-    updates.push(`notificaciones_habilitadas = $${updates.length + 1}`);
-    values.push(datos.notificaciones_habilitadas);
-  }
-  if (datos.notif_comentarios_habilitada !== undefined) {
-    updates.push(`notif_comentarios_habilitada = $${updates.length + 1}`);
-    values.push(datos.notif_comentarios_habilitada);
-  }
-  if (datos.notif_favoritos_habilitada !== undefined) {
-    updates.push(`notif_favoritos_habilitada = $${updates.length + 1}`);
-    values.push(datos.notif_favoritos_habilitada);
-  }
-  if (datos.notif_seguidores_habilitada !== undefined) {
-    updates.push(`notif_seguidores_habilitada = $${updates.length + 1}`);
-    values.push(datos.notif_seguidores_habilitada);
-  }
-  if (datos.notif_info_habilitada !== undefined) {
-    updates.push(`notif_info_habilitada = $${updates.length + 1}`);
-    values.push(datos.notif_info_habilitada);
-  }
+  // Nota: columnas como telefono, pais, username, etc. se actualizable después de ejecutar ALTER TABLE en Neon
+  // Por ahora solo actualizamos nombre. El resto será implementado una vez las columnas existan.
 
   if (updates.length === 0) return { ok: true };
 
