@@ -35,7 +35,7 @@ export default function FavoritosClient({ favoritos }: FavoritosClientProps) {
         }}
       >
         {favoritos.map(contenido => (
-          <ContentCard key={contenido.id} contenido={contenido} />
+          <ContentCard key={contenido.id} item={contenido} />
         ))}
       </div>
     </div>
