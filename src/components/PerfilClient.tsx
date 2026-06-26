@@ -8,7 +8,6 @@ import ContentCard from "./ContentCard";
 import { Contenido } from "@/lib/contenido";
 
 interface PerfilClientProps {
-  favoritos: Contenido[];
   notificaciones?: {
     comentarios: boolean;
     favoritos: boolean;
@@ -17,12 +16,12 @@ interface PerfilClientProps {
   };
 }
 
-type Seccion = "info" | "social" | "preferencias" | "privacidad" | "notificaciones" | "seguridad" | "pedir" | "favoritos";
+type Seccion = "info" | "social" | "preferencias" | "privacidad" | "notificaciones" | "seguridad" | "pedir";
 
 const GENEROS = ["Anime", "Serie", "Película"];
 const IDIOMAS = ["Español", "Inglés", "Japonés", "Francés"];
 
-export default function PerfilClient({ favoritos, notificaciones }: PerfilClientProps) {
+export default function PerfilClient({ notificaciones }: PerfilClientProps) {
   const { usuario } = useAuth();
   const [seccionActiva, setSeccionActiva] = useState<Seccion>("info");
   const [guardando, setGuardando] = useState(false);
@@ -144,7 +143,6 @@ export default function PerfilClient({ favoritos, notificaciones }: PerfilClient
           { id: "notificaciones" as Seccion, label: "Notificaciones", icon: "🔔" },
           { id: "seguridad" as Seccion, label: "Seguridad", icon: "🔐" },
           { id: "pedir" as Seccion, label: "Pedir", icon: "📨" },
-          { id: "favoritos" as Seccion, label: "Favoritos", icon: "❤️" },
         ].map(({ id, label, icon }) => (
           <button
             key={id}
@@ -645,25 +643,6 @@ export default function PerfilClient({ favoritos, notificaciones }: PerfilClient
         </div>
       )}
 
-      {/* Sección: Favoritos */}
-      {seccionActiva === "favoritos" && (
-        <div className="flex flex-col gap-4">
-          <h3 className="text-lg font-bold" style={{ color: "var(--text-primary)" }}>Mis Favoritos</h3>
-
-          {favoritos.length === 0 ? (
-            <div className="px-6 py-12 rounded-2xl text-center" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}>
-              <p style={{ color: "var(--text-muted)" }}>Todavía no tienes favoritos.</p>
-              <p className="text-xs mt-2" style={{ color: "var(--text-muted)" }}>Toca el ♥ en cualquier título para guardarlo aquí.</p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-6 gap-4">
-              {favoritos.map((item) => (
-                <ContentCard key={item.id} item={item} />
-              ))}
-            </div>
-          )}
-        </div>
-      )}
     </div>
   );
 }
