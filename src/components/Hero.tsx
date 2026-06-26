@@ -159,7 +159,7 @@ export default function Hero({ items }: { items: Contenido[] }) {
                   className="text-sm md:text-base leading-relaxed"
                   style={{ color: "var(--text-secondary)" }}
                 >
-                  {actual.sinopsis || actual.descripcion}
+                  {actual.descripcion}
                 </p>
 
                 {/* CTA Button */}
