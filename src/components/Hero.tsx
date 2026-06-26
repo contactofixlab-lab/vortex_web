@@ -56,9 +56,9 @@ export default function Hero({ items }: { items: Contenido[] }) {
         </span>
       </div>
 
-      {/* Banner — foto + nombre a la izquierda, descripción a la derecha. Cambia solo. */}
+      {/* Banner — foto premium + descripción en card neon */}
       <div
-        className="relative glass-card rounded-3xl overflow-hidden"
+        className="relative rounded-3xl overflow-hidden"
         onMouseEnter={() => setPaused(true)}
         onMouseLeave={() => setPaused(false)}
       >
@@ -70,38 +70,110 @@ export default function Hero({ items }: { items: Contenido[] }) {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
           >
-            <Link href={`/${TIPO_HREF[actual.tipo]}/${actual.slug}`} className="group grid grid-cols-1 md:grid-cols-[2fr_1fr] gap-6 p-5 md:p-7">
-              {/* Imagen (el doble de ancho que la descripción) + nombre debajo */}
-              <div>
-                <div className="relative aspect-[16/9] rounded-2xl overflow-hidden mb-3">
+            <Link href={`/${TIPO_HREF[actual.tipo]}/${actual.slug}`} className="group grid grid-cols-1 md:grid-cols-[2.5fr_1.5fr] gap-6 md:gap-8">
+              {/* Foto Premium — con glow y border neon */}
+              <div className="flex flex-col gap-4">
+                <div className="relative aspect-[16/9] rounded-2xl overflow-hidden group/img">
                   <Image
                     src={actual.portada}
                     alt={actual.titulo}
                     fill
-                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    className="object-cover transition-all duration-700 group-hover/img:scale-110 group-hover/img:brightness-110"
                     sizes="(max-width: 768px) 100vw, 60vw"
                     priority
                   />
+                  {/* Glow neon alrededor de la imagen */}
+                  <div
+                    className="absolute inset-0 rounded-2xl pointer-events-none"
+                    style={{
+                      boxShadow: `inset 0 0 0 2px ${color}, 0 0 30px ${color}44`,
+                      opacity: 0.8,
+                      transition: "all 0.5s ease",
+                    }}
+                  />
                 </div>
                 <h2
-                  className="text-lg md:text-xl font-black leading-tight"
-                  style={{ fontFamily: "var(--font-orbitron)", color: "var(--text-primary)" }}
+                  className="text-2xl md:text-3xl font-black leading-tight tracking-tight"
+                  style={{
+                    fontFamily: "var(--font-orbitron)",
+                    background: `linear-gradient(135deg, ${color}, var(--neon-cyan))`,
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    backgroundClip: "text",
+                  }}
                 >
                   {actual.titulo}
                 </h2>
               </div>
 
-              {/* Descripción a la derecha */}
-              <div className="min-w-0 flex flex-col justify-center">
+              {/* Descripción en Card Glass + Neon Border */}
+              <div
+                className="rounded-2xl p-6 md:p-7 flex flex-col justify-center gap-4"
+                style={{
+                  background: `linear-gradient(135deg, rgba(0,184,255,0.05) 0%, ${color}08 100%)`,
+                  backdropFilter: "blur(12px)",
+                  border: `1.5px solid ${color}`,
+                  boxShadow: `0 0 20px ${color}33, inset 0 1px 0 rgba(255,255,255,0.1)`,
+                }}
+              >
+                {/* Tipo Badge */}
                 <span
-                  className="inline-block w-fit text-[10px] font-bold tracking-widest px-2 py-0.5 rounded mb-3"
-                  style={{ background: `${color}22`, color, border: `1px solid ${color}55`, fontFamily: "var(--font-orbitron)" }}
+                  className="inline-block w-fit text-[11px] font-bold tracking-widest px-3 py-1.5 rounded-lg"
+                  style={{
+                    background: `${color}22`,
+                    color: color,
+                    border: `1px solid ${color}66`,
+                    fontFamily: "var(--font-orbitron)",
+                    boxShadow: `0 0 10px ${color}33`,
+                  }}
                 >
                   {actual.tipo.toUpperCase()}
                 </span>
-                <p className="text-sm md:text-base" style={{ color: "var(--text-secondary)" }}>
-                  {actual.descripcion}
+
+                {/* Metadata */}
+                {(actual.anio || actual.genero) && (
+                  <div className="flex flex-wrap gap-2">
+                    {actual.anio && (
+                      <span className="text-xs px-2 py-1 rounded" style={{
+                        background: "rgba(255,212,71,0.1)",
+                        color: "var(--neon-yellow)",
+                        border: "1px solid rgba(255,212,71,0.3)",
+                      }}>
+                        📅 {actual.anio}
+                      </span>
+                    )}
+                    {actual.genero && actual.genero.length > 0 && (
+                      <span className="text-xs px-2 py-1 rounded" style={{
+                        background: "rgba(57,255,20,0.1)",
+                        color: "#39ff14",
+                        border: "1px solid rgba(57,255,20,0.3)",
+                      }}>
+                        🎬 {actual.genero.slice(0, 2).join(", ")}
+                      </span>
+                    )}
+                  </div>
+                )}
+
+                {/* Descripción */}
+                <p
+                  className="text-sm md:text-base leading-relaxed"
+                  style={{ color: "var(--text-secondary)" }}
+                >
+                  {actual.sinopsis || actual.descripcion}
                 </p>
+
+                {/* CTA Button */}
+                <button
+                  className="mt-4 w-full py-2.5 rounded-lg font-semibold text-sm transition-all"
+                  style={{
+                    background: `${color}22`,
+                    color: color,
+                    border: `1.5px solid ${color}`,
+                    boxShadow: `0 0 15px ${color}44`,
+                  }}
+                >
+                  Ver más →
+                </button>
               </div>
             </Link>
           </motion.div>

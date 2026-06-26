@@ -86,25 +86,35 @@ body {
   position: relative;
   overflow-x: hidden;
   background-image:
-    /* Capas de nebulosa animadas */
-    radial-gradient(ellipse 100% 60% at 15% -10%, rgba(139,92,246,0.12) 0%, transparent 55%),
-    radial-gradient(ellipse 80% 70% at 90% 110%, rgba(0,184,255,0.10) 0%, transparent 55%),
-    radial-gradient(ellipse 90% 50% at 50% 50%, rgba(255,79,216,0.05) 0%, transparent 60%),
-    radial-gradient(ellipse 70% 40% at 20% 80%, rgba(0,184,255,0.06) 0%, transparent 50%),
-    /* Base */
+    /* Aurora Cyan - arriba */
+    radial-gradient(ellipse 150% 80% at 0% -20%, rgba(0,184,255,0.15) 0%, transparent 60%),
+    /* Aurora Violeta - derecha */
+    radial-gradient(ellipse 120% 100% at 120% 10%, rgba(139,92,246,0.18) 0%, transparent 55%),
+    /* Aurora Rosa - abajo derecha */
+    radial-gradient(ellipse 140% 90% at 100% 120%, rgba(255,79,216,0.12) 0%, transparent 65%),
+    /* Aurora Cyan - izquierda */
+    radial-gradient(ellipse 130% 100% at -30% 80%, rgba(0,184,255,0.10) 0%, transparent 60%),
+    /* Base oscura */
     linear-gradient(180deg, var(--bg-base) 0%, var(--bg-violet-deep) 100%);
   background-attachment: fixed;
-  background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%;
+  background-size: 200% 200%, 200% 200%, 200% 200%, 200% 200%, 100% 100%;
   background-position: 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%;
-  animation: nebula-drift 40s ease-in-out infinite;
+  animation: aurora-dance 15s ease-in-out infinite;
 }
 
-@keyframes nebula-drift {
-  0% { background-position: 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%; }
-  25% { background-position: 2% -3%, -1% 2%, 1% 1%, -2% 0%, 0% 0%; }
-  50% { background-position: 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%; }
-  75% { background-position: -2% 3%, 1% -2%, -1% -1%, 2% 0%, 0% 0%; }
-  100% { background-position: 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%; }
+@keyframes aurora-dance {
+  0%, 100% {
+    background-position: 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%;
+  }
+  25% {
+    background-position: -30% 10%, 20% -15%, -20% 25%, 25% -20%, 0% 0%;
+  }
+  50% {
+    background-position: 0% 30%, 0% 20%, 0% 0%, 0% 30%, 0% 0%;
+  }
+  75% {
+    background-position: 30% -10%, -25% 30%, 20% -30%, -30% 20%, 0% 0%;
+  }
 }
 
 /* Scrollbar cyberpunk */
@@ -156,28 +166,41 @@ body {
   border-color: var(--border-glass-hover);
 }
 
-/* ── Navbar flotante mejorado ── */
+/* ── Navbar flotante - Gradiente Animado ── */
 .glass-nav {
-  background: linear-gradient(135deg, rgba(12,12,22,0.45) 0%, rgba(26,16,51,0.35) 100%);
-  backdrop-filter: var(--glass-blur) saturate(180%) brightness(1.1);
-  -webkit-backdrop-filter: var(--glass-blur) saturate(180%) brightness(1.1);
-  border: 1px solid rgba(0,184,255,0.2);
-  border-top-color: rgba(255,255,255,0.25);
+  background: linear-gradient(90deg,
+    rgba(0,184,255,0.15) 0%,
+    rgba(139,92,246,0.12) 30%,
+    rgba(255,79,216,0.10) 60%,
+    rgba(0,184,255,0.12) 100%);
+  background-size: 200% 100%;
+  backdrop-filter: var(--glass-blur) saturate(200%) brightness(1.15);
+  -webkit-backdrop-filter: var(--glass-blur) saturate(200%) brightness(1.15);
+  border: 1px solid rgba(0,184,255,0.35);
+  border-top-color: rgba(255,255,255,0.3);
   box-shadow:
-    0 8px 32px rgba(0,0,0,0.3),
-    0 0 40px rgba(0,184,255,0.15),
-    0 0 0 1px rgba(255,255,255,0.1) inset,
-    0 2px 0 rgba(255,255,255,0.08) inset;
+    0 0px 0 rgba(255,255,255,0.1) inset,
+    0 2px 0 rgba(255,255,255,0.1) inset,
+    0 0 40px rgba(0,184,255,0.2),
+    0 8px 32px rgba(0,0,0,0.35),
+    0 0 60px rgba(139,92,246,0.1);
+  animation: navbar-gradient-shift 8s ease-in-out infinite;
   transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
 }
 
 .glass-nav:hover {
-  background: linear-gradient(135deg, rgba(12,12,22,0.55) 0%, rgba(26,16,51,0.45) 100%);
+  background-position: -100% 0;
   box-shadow:
+    0 0px 0 rgba(255,255,255,0.15) inset,
+    0 2px 0 rgba(255,255,255,0.15) inset,
+    0 0 60px rgba(0,184,255,0.35),
     0 12px 48px rgba(0,0,0,0.4),
-    0 0 60px rgba(0,184,255,0.25),
-    0 0 0 1px rgba(255,255,255,0.15) inset,
-    0 2px 0 rgba(255,255,255,0.12) inset;
+    0 0 80px rgba(255,79,216,0.15);
+}
+
+@keyframes navbar-gradient-shift {
+  0%, 100% { background-position: 0% 0%; }
+  50% { background-position: -100% 0%; }
 }
 
 /* ── Inputs con profundidad ── */
