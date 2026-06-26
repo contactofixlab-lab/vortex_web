@@ -153,7 +153,7 @@ export default function Navbar() {
                     />
 
                     <Link
-                      href="/perfil?seccion=favoritos"
+                      href="/perfil/favoritos"
                       onClick={() => setMenuOpen(false)}
                       className="flex items-center gap-2.5 px-4 py-2.5 text-sm transition-colors"
                       style={{ color: "var(--text-secondary)" }}
