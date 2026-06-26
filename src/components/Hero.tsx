@@ -131,15 +131,15 @@ export default function Hero({ items }: { items: Contenido[] }) {
                 </span>
 
                 {/* Metadata */}
-                {(actual.anio || actual.genero) && (
+                {(actual.año || actual.genero) && (
                   <div className="flex flex-wrap gap-2">
-                    {actual.anio && (
+                    {actual.año && (
                       <span className="text-xs px-2 py-1 rounded" style={{
                         background: "rgba(255,212,71,0.1)",
                         color: "var(--neon-yellow)",
                         border: "1px solid rgba(255,212,71,0.3)",
                       }}>
-                        📅 {actual.anio}
+                        📅 {actual.año}
                       </span>
                     )}
                     {actual.genero && actual.genero.length > 0 && (
