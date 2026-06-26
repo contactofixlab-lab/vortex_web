@@ -83,11 +83,28 @@ body {
   color: var(--text-primary);
   font-family: var(--font-inter), Arial, sans-serif;
   min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
   background-image:
-    radial-gradient(ellipse 70% 50% at 15% -10%, rgba(139,92,246,0.10) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 50% at 90% 110%, rgba(0,184,255,0.07) 0%, transparent 60%),
-    radial-gradient(ellipse 50% 40% at 50% 50%, rgba(26,16,51,0.5) 0%, transparent 70%);
+    /* Capas de nebulosa animadas */
+    radial-gradient(ellipse 100% 60% at 15% -10%, rgba(139,92,246,0.12) 0%, transparent 55%),
+    radial-gradient(ellipse 80% 70% at 90% 110%, rgba(0,184,255,0.10) 0%, transparent 55%),
+    radial-gradient(ellipse 90% 50% at 50% 50%, rgba(255,79,216,0.05) 0%, transparent 60%),
+    radial-gradient(ellipse 70% 40% at 20% 80%, rgba(0,184,255,0.06) 0%, transparent 50%),
+    /* Base */
+    linear-gradient(180deg, var(--bg-base) 0%, var(--bg-violet-deep) 100%);
   background-attachment: fixed;
+  background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%;
+  background-position: 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%;
+  animation: nebula-drift 40s ease-in-out infinite;
+}
+
+@keyframes nebula-drift {
+  0% { background-position: 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%; }
+  25% { background-position: 2% -3%, -1% 2%, 1% 1%, -2% 0%, 0% 0%; }
+  50% { background-position: 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%; }
+  75% { background-position: -2% 3%, 1% -2%, -1% -1%, 2% 0%, 0% 0%; }
+  100% { background-position: 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%; }
 }
 
 /* Scrollbar cyberpunk */
@@ -139,14 +156,28 @@ body {
   border-color: var(--border-glass-hover);
 }
 
-/* ── Navbar flotante ── */
+/* ── Navbar flotante mejorado ── */
 .glass-nav {
-  background: rgba(12,12,22,0.6);
-  backdrop-filter: var(--glass-blur) saturate(150%);
-  -webkit-backdrop-filter: var(--glass-blur) saturate(150%);
-  border: 1px solid var(--border-glass);
-  border-top-color: rgba(255,255,255,0.14);
-  box-shadow: var(--shadow-float);
+  background: linear-gradient(135deg, rgba(12,12,22,0.45) 0%, rgba(26,16,51,0.35) 100%);
+  backdrop-filter: var(--glass-blur) saturate(180%) brightness(1.1);
+  -webkit-backdrop-filter: var(--glass-blur) saturate(180%) brightness(1.1);
+  border: 1px solid rgba(0,184,255,0.2);
+  border-top-color: rgba(255,255,255,0.25);
+  box-shadow:
+    0 8px 32px rgba(0,0,0,0.3),
+    0 0 40px rgba(0,184,255,0.15),
+    0 0 0 1px rgba(255,255,255,0.1) inset,
+    0 2px 0 rgba(255,255,255,0.08) inset;
+  transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
+}
+
+.glass-nav:hover {
+  background: linear-gradient(135deg, rgba(12,12,22,0.55) 0%, rgba(26,16,51,0.45) 100%);
+  box-shadow:
+    0 12px 48px rgba(0,0,0,0.4),
+    0 0 60px rgba(0,184,255,0.25),
+    0 0 0 1px rgba(255,255,255,0.15) inset,
+    0 2px 0 rgba(255,255,255,0.12) inset;
 }
 
 /* ── Inputs con profundidad ── */
@@ -228,6 +259,27 @@ body {
   100% { transform: translateY(100vh); opacity: 0; }
 }
 
+/* ── Animaciones de nebulosa (background) ── */
+@keyframes nebula-1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-50px, -100px) scale(1.2); }
+}
+
+@keyframes nebula-2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(80px, 60px) scale(0.9); }
+}
+
+@keyframes nebula-3 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-60px, 100px) scale(1.1); }
+}
+
+@keyframes aurora-float {
+  0%, 100% { opacity: 0.3; filter: blur(60px); }
+  50% { opacity: 0.6; filter: blur(80px); }
+}
+
 .login-logo {
   animation: logo-pulse 3s ease-in-out infinite;
 }
@@ -242,4 +294,9 @@ body {
 
 .scan-line {
   animation: scan-line 6s linear infinite;
+}
+
+/* Elemento de fondo animado (pseudo) */
+::before {
+  animation: aurora-float 8s ease-in-out infinite;
 }
