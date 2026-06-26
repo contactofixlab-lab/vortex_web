@@ -9,9 +9,7 @@ export default function PerfilNavigation() {
   const seccion = searchParams.get("seccion") || "configuracion";
 
   const secciones = [
-    { id: "configuracion", label: "Configuración", icon: Settings },
-    { id: "favoritos", label: "Favoritos", icon: Heart },
-    { id: "notificaciones", label: "Notificaciones", icon: Bell },
+    { id: "configuracion", label: "Mi Perfil", icon: Settings },
   ];
 
   return (
