@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import { useAuth } from "./AuthProvider";
 import { actualizarPerfil, cambiarPassword } from "@/app/actions";
 import { Heart, Save, X, Eye, EyeOff, Lock, Mail, User, Phone, Globe, MessageSquare } from "lucide-react";
@@ -23,9 +24,17 @@ const IDIOMAS = ["Español", "Inglés", "Japonés", "Francés"];
 
 export default function PerfilClient({ notificaciones }: PerfilClientProps) {
   const { usuario } = useAuth();
+  const searchParams = useSearchParams();
   const [seccionActiva, setSeccionActiva] = useState<Seccion>("info");
   const [guardando, setGuardando] = useState(false);
   const [mensaje, setMensaje] = useState<{ tipo: "exito" | "error"; texto: string } | null>(null);
+
+  useEffect(() => {
+    const seccion = searchParams.get("seccion") as Seccion || "info";
+    if (["info", "social", "preferencias", "privacidad", "notificaciones", "seguridad", "pedir"].includes(seccion)) {
+      setSeccionActiva(seccion);
+    }
+  }, [searchParams]);
 
   // Estados de edición
   const [nombre, setNombre] = useState(usuario?.nombre || "");
