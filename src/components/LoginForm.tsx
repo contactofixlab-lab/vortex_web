@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Mail, Lock, Eye, EyeOff, User, ArrowRight, Loader2, AlertCircle } from "lucide-react";
 import { iniciarSesion, registrarUsuario } from "@/app/actions";
+import GoogleButton from "./GoogleButton";
 
 type Tab = "login" | "registro";
 
@@ -231,6 +232,11 @@ export default function LoginForm() {
               )}
             </button>
           </form>
+
+          {/* Google Sign In */}
+          <div className="mt-6">
+            <GoogleButton />
+          </div>
 
           {/* Divider */}
           <div className="flex items-center gap-3 my-6">
