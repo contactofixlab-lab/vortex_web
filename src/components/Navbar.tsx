@@ -14,6 +14,7 @@ const LINKS = [
   { href: "/anime",     label: "Anime"     },
   { href: "/series",    label: "Series"    },
   { href: "/peliculas", label: "Películas" },
+  { href: "/planes",    label: "Planes"    },
 ];
 
 export default function Navbar() {

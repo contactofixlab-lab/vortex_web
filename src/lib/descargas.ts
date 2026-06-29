@@ -14,7 +14,7 @@ export async function getDescargaresHoy(usuarioId: number): Promise<number> {
       AND fecha >= ${hoy.toISOString()}
   `;
 
-  return result[0]?.cantidad || 0;
+  return Number(result[0]?.cantidad || 0);
 }
 
 export async function canDownload(usuarioId: number): Promise<boolean> {
