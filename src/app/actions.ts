@@ -299,3 +299,30 @@ export async function toggleFavorito(contenidoId: number): Promise<{ ok: true; f
 
   return { ok: true, favorito: true };
 }
+
+export async function crearPreferenciaCompra() {
+  const usuario = await getSesion();
+  if (!usuario) return { ok: false, error: "Debes iniciar sesión." };
+
+  try {
+    const { crearPreferencia } = await import("@/lib/mercado-pago");
+    const preferencia = await crearPreferencia(usuario.id, 2990); // $2.990 CLP
+    return { ok: true, preferencia };
+  } catch (err) {
+    console.error("Error creating preference:", err);
+    return { ok: false, error: "Error al crear preferencia de pago." };
+  }
+}
+
+export async function registrarDescarga(contenidoId: number) {
+  const usuario = await getSesion();
+  if (!usuario) return { ok: false, error: "Debes iniciar sesión." };
+
+  try {
+    const { logDescargar } = await import("@/lib/descargas");
+    await logDescargar(usuario.id, contenidoId);
+    return { ok: true };
+  } catch (err) {
+    return { ok: false, error: (err as Error).message };
+  }
+}
