@@ -18,6 +18,14 @@ export default async function Home() {
       {/* Hero — Destacados */}
       <Hero items={destacados} />
 
+      {/* Sección Lo Último */}
+      <ContentSection
+        titulo="LO ÚLTIMO"
+        color="var(--neon-yellow)"
+        href="/"
+        items={ultimos}
+      />
+
       {/* Sección Anime */}
       <ContentSection
         titulo="ANIME"
@@ -32,14 +40,6 @@ export default async function Home() {
         color="var(--neon-cyan)"
         href="/series"
         items={series}
-      />
-
-      {/* Sección Lo Último */}
-      <ContentSection
-        titulo="LO ÚLTIMO"
-        color="var(--neon-yellow)"
-        href="/"
-        items={ultimos}
       />
 
       {/* Sección Películas */}
