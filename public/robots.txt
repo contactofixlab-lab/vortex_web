@@ -1,0 +1,21 @@
+User-agent: *
+Allow: /
+Allow: /anime
+Allow: /series
+Allow: /peliculas
+Allow: /planes
+Disallow: /login
+Disallow: /checkout
+Disallow: /perfil
+Disallow: /admin
+Disallow: /*.json$
+Disallow: /*?*
+
+Sitemap: https://vortex-web-beta.vercel.app/sitemap.xml
+
+# Delay for aggressive crawlers
+User-agent: AhrefsBot
+Crawl-delay: 10
+
+User-agent: SemrushBot
+Crawl-delay: 10

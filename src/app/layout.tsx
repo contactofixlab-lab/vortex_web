@@ -18,8 +18,36 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Vortex — Descarga series, películas y anime",
-  description: "Tu portal de descargas de series, películas y anime en español.",
+  title: "Vortex — Descarga Series, Películas y Anime Gratis",
+  description: "Descarga gratis tus series, películas y anime favoritas en HD. Catálogo completo, sin límites. Acceso a miles de títulos en español.",
+  keywords: "descargar anime, descargar series, descargar películas, anime gratis, series gratis, películas gratis, descarga directa",
+  authors: [{ name: "Vortex" }],
+  creator: "Vortex",
+  publisher: "Vortex",
+  openGraph: {
+    type: "website",
+    locale: "es_ES",
+    url: "https://vortex-web-beta.vercel.app",
+    siteName: "Vortex",
+    title: "Vortex — Descarga Series, Películas y Anime Gratis",
+    description: "Descarga gratis tus series, películas y anime favoritos en HD.",
+    images: [
+      {
+        url: "https://vortex-web-beta.vercel.app/vortex-logo.png",
+        width: 1200,
+        height: 630,
+        alt: "Vortex",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Vortex — Descargas de Anime, Series y Películas",
+    description: "Tu portal de descargas en español sin límites",
+    images: ["https://vortex-web-beta.vercel.app/vortex-logo.png"],
+  },
+  robots: "index, follow",
+  viewport: "width=device-width, initial-scale=1",
 };
 
 export default async function RootLayout({
