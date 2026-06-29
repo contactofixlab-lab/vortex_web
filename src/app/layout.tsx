@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Orbitron, Inter } from "next/font/google";
-import { SessionWrapper } from "@/components/SessionWrapper";
 import SiteShell from "@/components/SiteShell";
 import { AuthProvider } from "@/components/AuthProvider";
 import { getSesion } from "@/lib/auth";
@@ -34,11 +33,9 @@ export default async function RootLayout({
   return (
     <html lang="es" className={`${orbitron.variable} ${inter.variable} h-full`}>
       <body className="min-h-full flex flex-col antialiased" style={{ background: "var(--bg-base)" }}>
-        <SessionWrapper>
-          <AuthProvider usuario={usuario} favoritoIds={favoritoIds}>
-            <SiteShell>{children}</SiteShell>
-          </AuthProvider>
-        </SessionWrapper>
+        <AuthProvider usuario={usuario} favoritoIds={favoritoIds}>
+          <SiteShell>{children}</SiteShell>
+        </AuthProvider>
       </body>
     </html>
   );
