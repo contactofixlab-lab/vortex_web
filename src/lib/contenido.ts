@@ -80,6 +80,11 @@ export async function getContenidoBySlug(tipo: "anime" | "serie" | "pelicula", s
   return rows[0] ? mapRow(rows[0]) : null;
 }
 
+export async function getUltimos(n = 12): Promise<Contenido[]> {
+  const rows = (await sql`SELECT ${sql.unsafe(SELECT_COLUMNS)} FROM contenido WHERE estado_publicacion = 'on' ORDER BY created_at DESC LIMIT ${n}`) as ContenidoRow[];
+  return rows.map(mapRow);
+}
+
 export async function getFavoritos(usuarioId: number): Promise<Contenido[]> {
   const rows = (await sql`
     SELECT c.id, c.tipo, c.titulo, c.slug, c.portada, c.sinopsis, c.anio, c.genero, c.idioma, c.episodios_total, c.estado_emision, c.vistas

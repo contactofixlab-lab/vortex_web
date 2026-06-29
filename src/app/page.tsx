@@ -1,15 +1,16 @@
 import Hero from "@/components/Hero";
 import ContentSection from "@/components/ContentSection";
-import { getAnimes, getSeries, getPeliculas, getDestacados } from "@/lib/contenido";
+import { getAnimes, getSeries, getPeliculas, getDestacados, getUltimos } from "@/lib/contenido";
 
 export const revalidate = 0;
 
 export default async function Home() {
-  const [destacados, animes, series, peliculas] = await Promise.all([
+  const [destacados, animes, series, peliculas, ultimos] = await Promise.all([
     getDestacados(6),
     getAnimes(),
     getSeries(),
     getPeliculas(),
+    getUltimos(12),
   ]);
 
   return (
@@ -31,6 +32,14 @@ export default async function Home() {
         color="var(--neon-cyan)"
         href="/series"
         items={series}
+      />
+
+      {/* Sección Lo Último */}
+      <ContentSection
+        titulo="LO ÚLTIMO"
+        color="var(--neon-yellow)"
+        href="/"
+        items={ultimos}
       />
 
       {/* Sección Películas */}
