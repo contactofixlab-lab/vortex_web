@@ -1,0 +1,21 @@
+<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+  <!-- Fondo -->
+  <rect width="400" height="300" fill="#0a0a14"/>
+
+  <!-- Check grande de éxito -->
+  <circle cx="200" cy="100" r="40" fill="#00ff00" opacity="0.2" stroke="#00ff00" stroke-width="2"/>
+  <path d="M 185 105 L 195 115 L 225 85" stroke="#00ff00" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Título de éxito -->
+  <text x="200" y="180" font-family="Arial" font-size="24" font-weight="bold" fill="#00ff00" text-anchor="middle">¡Descarga completada!</text>
+
+  <!-- Detalles -->
+  <g>
+    <text x="60" y="220" font-family="Arial" font-size="14" fill="#00b8ff">Archivo: Attack_on_Titan_S01E03.mkv</text>
+    <text x="60" y="245" font-family="Arial" font-size="14" fill="#00b8ff">Tamaño: 1.2 GB | Localización: Descargas</text>
+    <text x="60" y="270" font-family="Arial" font-size="14" fill="#00b8ff">Velocidad: 25 MB/s ⚡</text>
+  </g>
+
+  <!-- Indicador de éxito adicional -->
+  <circle cx="360" cy="240" r="12" fill="#00ff00"/>
+</svg>

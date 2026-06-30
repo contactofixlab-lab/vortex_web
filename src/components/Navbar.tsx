@@ -14,7 +14,7 @@ const LINKS = [
   { href: "/anime",     label: "Anime"     },
   { href: "/series",    label: "Series"    },
   { href: "/peliculas", label: "Películas" },
-  { href: "/planes",    label: "Planes"    },
+  { href: "/nosotros",  label: "Nosotros"  },
 ];
 
 export default function Navbar() {
@@ -55,8 +55,14 @@ export default function Navbar() {
             <Image src="/vortex logo.png" alt="Vortex" fill sizes="160px" style={{ objectFit: "contain" }} />
           </Link>
 
-          {/* Nav links — desktop */}
-          <nav className="hidden md:flex items-center gap-1">
+          {/* Nav links — desktop, segmented pill unificado */}
+          <nav
+            className="hidden md:flex items-center gap-1 p-1.5 rounded-full"
+            style={{
+              background: "rgba(255,255,255,0.03)",
+              border: "1px solid rgba(255,255,255,0.08)",
+            }}
+          >
             {LINKS.map(({ href, label }) => {
               const active = pathname === href;
               return (
@@ -66,8 +72,9 @@ export default function Navbar() {
                   className="px-5 py-2 rounded-full text-base font-medium tracking-wide transition-all"
                   style={{
                     color: active ? "var(--neon-yellow)" : "var(--text-secondary)",
-                    background: active ? "rgba(255,212,71,0.1)" : "transparent",
-                    border: active ? "1px solid rgba(255,212,71,0.3)" : "1px solid transparent",
+                    background: active
+                      ? "linear-gradient(135deg, rgba(255,212,71,0.18), rgba(255,212,71,0.08))"
+                      : "transparent",
                     boxShadow: active ? "0 0 10px rgba(255,212,71,0.2)" : "none",
                   }}
                 >
@@ -140,6 +147,8 @@ export default function Navbar() {
                       onClick={() => setMenuOpen(false)}
                       className="flex items-center gap-2.5 px-4 py-2.5 text-sm transition-colors"
                       style={{ color: "var(--text-secondary)" }}
+                      onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(255,212,71,0.12)"; e.currentTarget.style.color = "var(--neon-yellow)"; }}
+                      onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "var(--text-secondary)"; }}
                     >
                       <Bell size={14} style={{ color: "var(--neon-yellow)" }} />
                       Notificaciones
@@ -158,6 +167,8 @@ export default function Navbar() {
                       onClick={() => setMenuOpen(false)}
                       className="flex items-center gap-2.5 px-4 py-2.5 text-sm transition-colors"
                       style={{ color: "var(--text-secondary)" }}
+                      onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(255,79,216,0.12)"; e.currentTarget.style.color = "var(--neon-pink)"; }}
+                      onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "var(--text-secondary)"; }}
                     >
                       <Heart size={14} style={{ color: "var(--neon-pink)" }} />
                       Mis Favoritos
@@ -168,6 +179,8 @@ export default function Navbar() {
                       onClick={() => setMenuOpen(false)}
                       className="flex items-center gap-2.5 px-4 py-2.5 text-sm transition-colors"
                       style={{ color: "var(--text-secondary)" }}
+                      onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(0,184,255,0.12)"; e.currentTarget.style.color = "var(--neon-cyan)"; }}
+                      onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "var(--text-secondary)"; }}
                     >
                       <Settings size={14} style={{ color: "var(--neon-cyan)" }} />
                       Mi Perfil
@@ -185,6 +198,8 @@ export default function Navbar() {
                       onClick={handleLogout}
                       className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm transition-colors text-left"
                       style={{ color: "var(--neon-pink)" }}
+                      onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(255,79,216,0.14)"; }}
+                      onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; }}
                     >
                       <LogOut size={14} />
                       Cerrar sesión

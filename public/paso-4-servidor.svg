@@ -1,0 +1,25 @@
+<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+  <!-- Fondo -->
+  <rect width="400" height="300" fill="#0a0a14"/>
+
+  <!-- Título -->
+  <text x="40" y="35" font-family="Arial" font-size="18" font-weight="bold" fill="#00b8ff">Servidores disponibles:</text>
+
+  <!-- OneDrive -->
+  <rect x="40" y="50" width="320" height="50" rx="8" fill="#1a2a3a" stroke="#00b8ff" stroke-width="2"/>
+  <circle cx="360" cy="75" r="8" fill="#00b8ff"/>
+  <text x="60" y="85" font-family="Arial" font-size="16" font-weight="bold" fill="#00b8ff">☁️ OneDrive - HD | 1.2 GB</text>
+
+  <!-- Google Drive -->
+  <rect x="40" y="120" width="320" height="50" rx="8" fill="#1a2a3a" stroke="#00b8ff" stroke-width="1" opacity="0.6"/>
+  <circle cx="360" cy="145" r="8" fill="#555"/>
+  <text x="60" y="155" font-family="Arial" font-size="16" fill="#888">📁 Google Drive - HD | 1.2 GB</text>
+
+  <!-- Mega -->
+  <rect x="40" y="190" width="320" height="50" rx="8" fill="#1a2a3a" stroke="#00b8ff" stroke-width="1" opacity="0.6"/>
+  <circle cx="360" cy="215" r="8" fill="#555"/>
+  <text x="60" y="225" font-family="Arial" font-size="16" fill="#888">⚡ Mega - HD | 1.2 GB</text>
+
+  <!-- Flecha -->
+  <path d="M 320 270 L 360 270 M 350 260 L 360 270 L 350 280" stroke="#00b8ff" stroke-width="2" fill="none"/>
+</svg>
